@@ -1,5 +1,6 @@
-## Litentry Dynamic Assertion Contracts 
+![Logo](https://avatars.githubusercontent.com/u/51339301?s=200&v=4)
 
+## Litentry Dynamic Assertion Contracts 
 This repo is the contracts part separated from the [litentry-parachain](https://github.com/litentry/litentry-parachain).
 
 ## System Requirements
