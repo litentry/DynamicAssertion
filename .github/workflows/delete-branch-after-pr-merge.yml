@@ -1,19 +1,19 @@
 name: Delete branch after PR merge
 
 on:
-  pull_request_target:
-    types:
-      - closed
+    pull_request_target:
+        types:
+            - closed
 
 jobs:
-  delete_branch_optionally:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    delete_branch_optionally:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
 
-      - name: delete_branch
-        run: |
-          git push origin --delete "${{ github.head_ref }}"
-          echo "remote branch ${{ github.head_ref }} deleted"
+            - name: delete_branch
+              run: |
+                  git push origin --delete "${{ github.head_ref }}"
+                  echo "remote branch ${{ github.head_ref }} deleted"
