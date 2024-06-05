@@ -15,7 +15,7 @@ on:
             - synchronize
             - ready_for_review
 jobs:
-    set-node:
+    set-env:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
     fmt:
         runs-on: ubuntu-latest
         needs:
-            - set-node
+            - set-env
         steps:
             - uses: actions/checkout@v4
 
@@ -40,23 +40,20 @@ jobs:
               run: |
                   npm run fmt-check
 
-    compile:
+    compile-tests:
         runs-on: ubuntu-latest
         needs:
             - fmt
         steps:
             - uses: actions/checkout@v4
 
+            - name: Install deps
+              run: |
+                  npm install
+
             - name: Compile solidity
               run: |
                   npm run compile
-
-    hardhat-test:
-        runs-on: ubuntu-latest
-        needs:
-            - compile
-        steps:
-            - uses: actions/checkout@v4
 
             - name: Run hardhat test
               run: |
