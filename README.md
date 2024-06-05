@@ -50,5 +50,6 @@ This repo is the contracts part separated from the [litentry-parachain](https://
    npm run test:all or npx hardhat test
    ```
 
-​		[More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
+   [More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
+
 
