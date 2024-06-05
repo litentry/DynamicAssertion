@@ -41,13 +41,14 @@ This repo is the contracts part separated from the [litentry-parachain](https://
    npm run compile or npx hardhat compile
    ```
 
-   [Compile directory structure](https://hardhat.org/hardhat-runner/docs/advanced/artifacts#directory-structure)
+   [Compiled directory structure](https://hardhat.org/hardhat-runner/docs/advanced/artifacts#directory-structure)
 
 6. Run ts-tests
 
-   ```
+   ```typescript
    # From the repo's root
    npm run test:all or npx hardhat test
    ```
 
-​	[More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
+​		[More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
+
