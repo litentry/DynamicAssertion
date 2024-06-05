@@ -27,6 +27,8 @@ jobs:
 
   fmt:
     runs-on: ubuntu-latest
+    needs:
+      - set-node
     steps:
       - uses: actions/checkout@v4
 
