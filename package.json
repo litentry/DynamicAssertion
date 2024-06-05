@@ -4,10 +4,11 @@
 	"license": "MIT",
 	"author": "Litentry Dev Team",
 	"scripts": {
-		"clean": "rm -rf artifacts cache",
+		"clean": "npx hardhat clean",
 		"compile": "hardhat compile",
 		"fmt": "prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol' && prettier --write .",
-		"fmt:check": "prettier --check --plugin=prettier-plugin-solidity 'contracts/**/*.sol' && prettier --check ."
+		"fmt-check": "prettier --check --plugin=prettier-plugin-solidity 'contracts/**/*.sol' && prettier --check .",
+		"test:all": "npx hardhat test"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox": "^5.0.0",
