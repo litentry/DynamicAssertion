@@ -1,13 +1,53 @@
-# Sample Hardhat Project
+## Litentry Dynamic Assertion Contracts 
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This repo is the contracts part separated from the [litentry-parachain](https://github.com/litentry/litentry-parachain).
 
-Try running some of the following tasks:
+## System Requirements
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-```
+- Node.js
+- Typescript
+- [Hardhat](https://hardhat.org/hardhat-runner/docs/getting-started#overview)
+- Solidity
+
+## Configuration
+
+- [Solidity versions](https://hardhat.org/hardhat-runner/docs/advanced/multiple-solidity-versions)
+- [Configuration Variables](https://hardhat.org/hardhat-runner/docs/config#configuration)
+
+## Getting started
+
+1. Install Node V18
+
+2. Clone this repo
+
+3. Switch to the right Node.js version using NVM.
+
+   ```typescript
+   # From the repo's root
+   nvm use
+   ```
+
+4. Install dependencies with `npm`
+
+   ```typescript
+   # From the repo's root
+   npm install
+   ```
+
+5. Compile contracts
+
+   ```typescript
+   # From the repo's root
+   npm run compile or npx hardhat compile
+   ```
+
+   [Compile directory structure](https://hardhat.org/hardhat-runner/docs/advanced/artifacts#directory-structure)
+
+6. Run ts-tests
+
+   ```
+   # From the repo's root
+   npm run test:all or npx hardhat test
+   ```
+
+​	[More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
