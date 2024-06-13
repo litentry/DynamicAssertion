@@ -18,19 +18,13 @@
 
 pragma solidity ^0.8.8;
 
-import "./libraries/Identities.sol";
+import "../libraries/Utils.sol";
 
-abstract contract DynamicAssertion {
-    string schema_url;
-
-    function execute(Identity[] memory identities, string[] memory secrets)
+contract ToHex {
+    function callToHex(string memory text)
         public
-        virtual
-        returns (
-            string memory,
-            string memory,
-            string[] memory,
-            string memory,
-            bool
-        );
+        returns (bool, string memory)
+    {
+        return Utils.toHex(bytes(text));
+    }
 }
