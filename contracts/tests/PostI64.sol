@@ -21,26 +21,26 @@ pragma solidity ^0.8.8;
 import "../libraries/Http.sol";
 
 contract PostI64 {
-    function callPostI64(
-        string memory url,
-        string memory jsonPointer,
-        string memory payload
-    ) public returns (bool, int64) {
-        HttpHeader[] memory headers = new HttpHeader[](0);
-        return Http.PostI64(url, jsonPointer, payload, headers);
-    }
+	function callPostI64(
+		string memory url,
+		string memory jsonPointer,
+		string memory payload
+	) public returns (bool, int64) {
+		HttpHeader[] memory headers = new HttpHeader[](0);
+		return Http.PostI64(url, jsonPointer, payload, headers);
+	}
 
-    function callPostI64TwiceAndReturnSecondResult(
-        string memory firstUrl,
-        string memory firstJsonPointer,
-        string memory firstPayload,
-        string memory secondUrl,
-        string memory secondJsonPointer,
-        string memory secondPayload
-    ) public returns (bool, int64) {
-        HttpHeader[] memory headers = new HttpHeader[](0);
-        Http.PostI64(firstUrl, firstJsonPointer, firstPayload, headers);
-        return
-            Http.PostI64(secondUrl, secondJsonPointer, secondPayload, headers);
-    }
+	function callPostI64TwiceAndReturnSecondResult(
+		string memory firstUrl,
+		string memory firstJsonPointer,
+		string memory firstPayload,
+		string memory secondUrl,
+		string memory secondJsonPointer,
+		string memory secondPayload
+	) public returns (bool, int64) {
+		HttpHeader[] memory headers = new HttpHeader[](0);
+		Http.PostI64(firstUrl, firstJsonPointer, firstPayload, headers);
+		return
+			Http.PostI64(secondUrl, secondJsonPointer, secondPayload, headers);
+	}
 }

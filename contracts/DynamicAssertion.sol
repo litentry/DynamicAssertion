@@ -21,16 +21,19 @@ pragma solidity ^0.8.8;
 import "./libraries/Identities.sol";
 
 abstract contract DynamicAssertion {
-    string schema_url;
+	string schema_url;
 
-    function execute(Identity[] memory identities, string[] memory secrets)
-        public
-        virtual
-        returns (
-            string memory,
-            string memory,
-            string[] memory,
-            string memory,
-            bool
-        );
+	function execute(
+		Identity[] memory identities,
+		string[] memory secrets
+	)
+		public
+		virtual
+		returns (
+			string memory,
+			string memory,
+			string[] memory,
+			string memory,
+			bool
+		);
 }

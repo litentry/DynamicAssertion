@@ -22,28 +22,28 @@ import "../libraries/Http.sol";
 import "../libraries/Utils.sol";
 
 library BlockchainInfoClient {
-    function getMultiAddress(string memory url, string[] memory accounts)
-        internal
-        returns (bool, int64)
-    {
-        string memory activeQueryParam = "";
+	function getMultiAddress(
+		string memory url,
+		string[] memory accounts
+	) internal returns (bool, int64) {
+		string memory activeQueryParam = "";
 
-        for (uint256 i = 0; i < accounts.length; i++) {
-            activeQueryParam = string(
-                abi.encodePacked(activeQueryParam, accounts[i])
-            );
-            if (i != accounts.length - 1) {
-                activeQueryParam = string(
-                    abi.encodePacked(activeQueryParam, "|")
-                );
-            }
-        }
+		for (uint256 i = 0; i < accounts.length; i++) {
+			activeQueryParam = string(
+				abi.encodePacked(activeQueryParam, accounts[i])
+			);
+			if (i != accounts.length - 1) {
+				activeQueryParam = string(
+					abi.encodePacked(activeQueryParam, "|")
+				);
+			}
+		}
 
-        url = string(
-            abi.encodePacked(url, "?active=", activeQueryParam, "&n=", "0")
-        );
+		url = string(
+			abi.encodePacked(url, "?active=", activeQueryParam, "&n=", "0")
+		);
 
-        HttpHeader[] memory headers = new HttpHeader[](0);
-        return Http.GetI64(url, "/wallet/final_balance", headers);
-    }
+		HttpHeader[] memory headers = new HttpHeader[](0);
+		return Http.GetI64(url, "/wallet/final_balance", headers);
+	}
 }

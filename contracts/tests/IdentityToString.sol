@@ -21,10 +21,10 @@ pragma solidity ^0.8.8;
 import "../libraries/Utils.sol";
 
 contract IdentityToString {
-    function callIdentityToString(
-        uint32 network_type,
-        bytes memory identity_value
-    ) public returns (bool, string memory) {
-        return Utils.identityToString(network_type, identity_value);
-    }
+	function callIdentityToString(
+		uint32 network_type,
+		bytes memory identity_value
+	) public returns (bool, string memory) {
+		return Utils.identityToString(network_type, identity_value);
+	}
 }

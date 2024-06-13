@@ -18,11 +18,11 @@
 
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { NativeToken } from "../NativeToken.sol";
 
-contract Btcs is BRC20 {
+contract BNB is NativeToken {
 	function getTokenName() internal pure override returns (string memory) {
-		return "btcs";
+		return "bnb";
 	}
 
 	function getTokenRanges()
@@ -31,16 +31,18 @@ contract Btcs is BRC20 {
 		override
 		returns (uint256[] memory)
 	{
-		uint256[] memory ranges = new uint256[](9);
+		uint256[] memory ranges = new uint256[](10);
 		ranges[0] = 0;
 		ranges[1] = 1;
-		ranges[2] = 5;
-		ranges[3] = 20;
-		ranges[4] = 50;
-		ranges[5] = 100;
-		ranges[6] = 200;
-		ranges[7] = 500;
-		ranges[8] = 800;
+		ranges[2] = 50;
+		ranges[3] = 100;
+		ranges[4] = 200;
+		ranges[5] = 500;
+		ranges[6] = 800;
+		ranges[7] = 1200;
+		ranges[8] = 1600;
+		ranges[9] = 3000;
+
 		return ranges;
 	}
 }
