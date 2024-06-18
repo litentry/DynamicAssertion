@@ -21,8 +21,22 @@ import "../libraries/Identities.sol";
 import "../libraries/Utils.sol";
 import { TokenHoldingAmount } from "./TokenHoldingAmount.sol";
 import { NoderealClient } from "./NoderealClient.sol";
+abstract contract ERC20 is TokenHoldingAmount {
+	mapping(uint32 => string) internal networkTokenAddresses;
 
-abstract contract NativeToken is TokenHoldingAmount {
+	mapping(uint32 => string) internal networkUrls;
+	mapping(uint32 => bool) private queriedNetworks;
+	constructor() {
+		networkUrls[
+			Web3Networks.Bsc
+		] = "https://bsc-mainnet.nodereal.io/v1/";
+		networkUrls[
+			Web3Networks.Ethereum
+		] = "https://eth-mainnet.nodereal.io/v1/";
+		// Add more networks as needed
+		// 	below url is used for test against mock server
+		// "http://localhost:19530/nodereal_jsonrpc/v1/",
+	}
 	function getTokenDecimals() internal pure override returns (uint8) {
 		return 18;
 	}
@@ -34,39 +48,48 @@ abstract contract NativeToken is TokenHoldingAmount {
 	) internal virtual override returns (uint256) {
 		(bool identityToStringSuccess, string memory identityString) = Utils
 			.identityToString(network, identity.value);
+
 		if (identityToStringSuccess) {
 			string memory url;
+			uint32[] memory networks = getTokenNetworks();
+			uint256 totalBalance = 0;
 
-			// For BNB balance
-			if (network == Web3Networks.Bsc) {
-				url = string(
-					abi.encodePacked(
-						// "https://bsc-mainnet.nodereal.io/v1/",
-						"http://localhost:19530/nodereal_jsonrpc/v1/",
-						secrets[0]
-					)
-				);
-			} else if (
-				// For ETH balance
-				network == Web3Networks.Ethereum
-			) {
-				url = string(
-					abi.encodePacked(
-						// "https://ethereum-mainnet.nodereal.io/v1/",
-						"http://localhost:19530/nodereal_jsonrpc/v1/",
-						secrets[0]
-					)
-				);
+			for (uint32 i = 0; i < networks.length; i++) {
+				// Check if this network has been queried
+				if (!queriedNetworks[network]) {
+					string memory _tokenContractAddress = networkTokenAddresses[
+						network
+					];
+
+					url = string(
+						abi.encodePacked(networkUrls[networks[i]], secrets[0])
+					);
+
+					(bool success, uint256 balance) = NoderealClient
+						.getTokenBalance(
+							url,
+							_tokenContractAddress,
+							identityString
+						);
+
+					if (success) {
+						totalBalance += balance;
+					}
+					// Mark this network as queried
+					queriedNetworks[network] = true;
+				}
 			}
-			(bool success, uint256 balance) = NoderealClient.getEthBalance(
-				url,
-				identityString
-			);
-			if (success) {
-				return balance;
-			}
+			return totalBalance;
 		}
 		return 0;
+	}
+
+	function getTokenNetworks() internal pure returns (uint32[] memory) {
+		uint32[] memory networks = new uint32[](2);
+		networks[0] = Web3Networks.Ethereum;
+		networks[1] = Web3Networks.Bsc;
+		// Add more networks as needed
+		return networks;
 	}
 
 	function isSupportedNetwork(

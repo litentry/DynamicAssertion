@@ -15,14 +15,25 @@
 // along with Litentry.  If not, see <https://www.gnu.org/licenses/>.
 
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { ERC20 } from "../ERC20.sol";
+import "../../libraries/Identities.sol";
 
-contract Long is BRC20 {
+contract Grt is ERC20 {
+	constructor() {
+		// Initialize network token addresses
+		networkTokenAddresses[
+			Web3Networks.Ethereum
+		] = "0xc944e90c64b2c07662a292be6244bdf05cda44a7";
+		networkTokenAddresses[
+			Web3Networks.Bsc
+		] = "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8";
+		// Add more addresses as needed
+	}
+
 	function getTokenName() internal pure override returns (string memory) {
-		return "long";
+		return "grt";
 	}
 
 	function getTokenRanges()
@@ -31,16 +42,18 @@ contract Long is BRC20 {
 		override
 		returns (uint256[] memory)
 	{
-		uint256[] memory ranges = new uint256[](9);
-		ranges[0] = 0;
-		ranges[1] = 1;
-		ranges[2] = 20;
-		ranges[3] = 50;
-		ranges[4] = 200;
-		ranges[5] = 500;
-		ranges[6] = 1000;
-		ranges[7] = 2000;
-		ranges[8] = 3000;
+		uint256[] memory ranges = new uint256[](10);
+		ranges[0] = 0 * decimals_factor;
+		ranges[1] = 1 * decimals_factor;
+		ranges[2] = 50 * decimals_factor;
+		ranges[3] = 100 * decimals_factor;
+		ranges[4] = 200 * decimals_factor;
+		ranges[5] = 500 * decimals_factor;
+		ranges[6] = 800 * decimals_factor;
+		ranges[7] = 1200 * decimals_factor;
+		ranges[8] = 1600 * decimals_factor;
+		ranges[9] = 3000 * decimals_factor;
+
 		return ranges;
 	}
 }

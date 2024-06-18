@@ -22,11 +22,12 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "../libraries/AssertionLogic.sol";
 import "../libraries/Identities.sol";
 import "../DynamicAssertion.sol";
-
 abstract contract TokenHoldingAmount is DynamicAssertion {
+	uint256 constant decimals_factor = 1000;
 	function execute(
 		Identity[] memory identities,
-		string[] memory secrets
+		string[] memory secrets,
+        bytes memory /*params*/
 	)
 		public
 		override
@@ -84,7 +85,9 @@ abstract contract TokenHoldingAmount is DynamicAssertion {
 		int256 max = 0;
 
 		for (uint32 i = 1; i < ranges.length; i++) {
-			if (balance < ranges[i] * 10 ** getTokenDecimals()) {
+			if (
+				balance * decimals_factor < ranges[i] * 10 ** getTokenDecimals()
+			) {
 				index = i - 1;
 				break;
 			}
@@ -123,7 +126,7 @@ abstract contract TokenHoldingAmount is DynamicAssertion {
 			1,
 			variable,
 			AssertionLogic.Op.GreaterEq,
-			Strings.toString(min)
+			Strings.toString(min / decimals_factor)
 		);
 		if (max > 0) {
 			AssertionLogic.andOp(
@@ -131,7 +134,7 @@ abstract contract TokenHoldingAmount is DynamicAssertion {
 				2,
 				variable,
 				AssertionLogic.Op.LessThan,
-				Strings.toString(max)
+				Strings.toString(uint256(max) / decimals_factor)
 			);
 		}
 

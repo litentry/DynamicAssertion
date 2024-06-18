@@ -18,11 +18,23 @@
 
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { ERC20 } from "../ERC20.sol";
+import "../../libraries/Identities.sol";
 
-contract Btcs is BRC20 {
+contract Dai is ERC20 {
+	constructor() {
+		// Initialize network token addresses
+		networkTokenAddresses[
+			Web3Networks.Ethereum
+		] = "0x6b175474e89094c44da98b954eedeac495271d0f";
+		networkTokenAddresses[
+			Web3Networks.Bsc
+		] = "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3";
+		// Add more addresses as needed
+	}
+
 	function getTokenName() internal pure override returns (string memory) {
-		return "btcs";
+		return "dai";
 	}
 
 	function getTokenRanges()
@@ -32,15 +44,16 @@ contract Btcs is BRC20 {
 		returns (uint256[] memory)
 	{
 		uint256[] memory ranges = new uint256[](9);
-		ranges[0] = 0;
-		ranges[1] = 1;
-		ranges[2] = 5;
-		ranges[3] = 20;
-		ranges[4] = 50;
-		ranges[5] = 100;
-		ranges[6] = 200;
-		ranges[7] = 500;
-		ranges[8] = 800;
+		ranges[0] = 0 * decimals_factor;
+		ranges[1] = 10 * decimals_factor;
+		ranges[2] = 30 * decimals_factor;
+		ranges[3] = 80 * decimals_factor;
+		ranges[4] = 200 * decimals_factor;
+		ranges[5] = 500 * decimals_factor;
+		ranges[6] = 1000 * decimals_factor;
+		ranges[7] = 2000 * decimals_factor;
+		ranges[8] = 5000 * decimals_factor;
+
 		return ranges;
 	}
 }

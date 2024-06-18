@@ -18,11 +18,23 @@
 
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { ERC20 } from "../ERC20.sol";
+import "../../libraries/Identities.sol";
 
-contract Mmss is BRC20 {
+contract Crv is ERC20 {
+	constructor() {
+		// Initialize network token addresses
+		networkTokenAddresses[
+			Web3Networks.Ethereum
+		] = "0xdac17f958d2ee523a2206206994597c13d831ec7";
+		networkTokenAddresses[
+			Web3Networks.Bsc
+		] = "";
+		// Add more addresses as needed
+	}
+
 	function getTokenName() internal pure override returns (string memory) {
-		return "mmss";
+		return "crv";
 	}
 
 	function getTokenRanges()
@@ -31,16 +43,18 @@ contract Mmss is BRC20 {
 		override
 		returns (uint256[] memory)
 	{
-		uint256[] memory ranges = new uint256[](9);
-		ranges[0] = 0;
-		ranges[1] = 1;
-		ranges[2] = 20;
-		ranges[3] = 50;
-		ranges[4] = 100;
-		ranges[5] = 200;
-		ranges[6] = 500;
-		ranges[7] = 1000;
-		ranges[8] = 2000;
+		uint256[] memory ranges = new uint256[](10);
+		ranges[0] = 0 * decimals_factor;
+		ranges[1] = 1 * decimals_factor;
+		ranges[2] = 50 * decimals_factor;
+		ranges[3] = 100 * decimals_factor;
+		ranges[4] = 200 * decimals_factor;
+		ranges[5] = 500 * decimals_factor;
+		ranges[6] = 800 * decimals_factor;
+		ranges[7] = 1200 * decimals_factor;
+		ranges[8] = 1600 * decimals_factor;
+		ranges[9] = 3000 * decimals_factor;
+
 		return ranges;
 	}
 }

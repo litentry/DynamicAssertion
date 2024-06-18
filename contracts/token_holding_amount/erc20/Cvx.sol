@@ -18,11 +18,23 @@
 
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { ERC20 } from "../ERC20.sol";
+import "../../libraries/Identities.sol";
 
-contract Cats is BRC20 {
+contract Cvx is ERC20 {
+	constructor() {
+		// Initialize network token addresses
+		networkTokenAddresses[
+			Web3Networks.Ethereum
+		] = "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b";
+		networkTokenAddresses[
+			Web3Networks.Bsc
+		] = "";
+		// Add more addresses as needed
+	}
+
 	function getTokenName() internal pure override returns (string memory) {
-		return "cats";
+		return "cvx";
 	}
 
 	function getTokenRanges()
@@ -31,15 +43,18 @@ contract Cats is BRC20 {
 		override
 		returns (uint256[] memory)
 	{
-		uint256[] memory ranges = new uint256[](8);
-		ranges[0] = 0;
-		ranges[1] = 1;
-		ranges[2] = 10000;
-		ranges[3] = 50000;
-		ranges[4] = 100000;
-		ranges[5] = 200000;
-		ranges[6] = 500000;
-		ranges[7] = 800000;
+		uint256[] memory ranges = new uint256[](10);
+		ranges[0] = 0 * decimals_factor;
+		ranges[1] = 1 * decimals_factor;
+		ranges[2] = 50 * decimals_factor;
+		ranges[3] = 100 * decimals_factor;
+		ranges[4] = 200 * decimals_factor;
+		ranges[5] = 500 * decimals_factor;
+		ranges[6] = 800 * decimals_factor;
+		ranges[7] = 1200 * decimals_factor;
+		ranges[8] = 1600 * decimals_factor;
+		ranges[9] = 3000 * decimals_factor;
+
 		return ranges;
 	}
 }

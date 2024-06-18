@@ -18,11 +18,23 @@
 
 pragma solidity ^0.8.8;
 
-import { BRC20 } from "../BRC20.sol";
+import { ERC20 } from "../ERC20.sol";
+import "../../libraries/Identities.sol";
 
-contract Sats is BRC20 {
+contract Mcrt is ERC20 {
+	constructor() {
+		// Initialize network token addresses
+		networkTokenAddresses[
+			Web3Networks.Ethereum
+		] = "0xde16ce60804a881e9f8c4ebb3824646edecd478d";
+		networkTokenAddresses[
+			Web3Networks.Bsc
+		] = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f";
+		// Add more addresses as needed
+	}
+
 	function getTokenName() internal pure override returns (string memory) {
-		return "sats";
+		return "mcrt";
 	}
 
 	function getTokenRanges()
@@ -31,16 +43,14 @@ contract Sats is BRC20 {
 		override
 		returns (uint256[] memory)
 	{
-		uint256[] memory ranges = new uint256[](9);
-		ranges[0] = 0;
-		ranges[1] = 1;
-		ranges[2] = 40000000;
-		ranges[3] = 200000000;
-		ranges[4] = 500000000;
-		ranges[5] = 1000000000;
-		ranges[6] = 2000000000;
-		ranges[7] = 4000000000;
-		ranges[8] = 6000000000;
+		uint256[] memory ranges = new uint256[](6);
+		ranges[0] = 0 * decimals_factor;
+		ranges[1] = 2000 * decimals_factor;
+		ranges[2] = 10000 * decimals_factor;
+		ranges[3] = 50000 * decimals_factor;
+		ranges[4] = 150000 * decimals_factor;
+		ranges[5] = 500000 * decimals_factor;
+
 		return ranges;
 	}
 }
