@@ -18,7 +18,6 @@
 
 pragma solidity ^0.8.8;
 
-import { ERC20 } from "../ERC20.sol";
 import "../../libraries/Identities.sol";
 
 library Wbtc {

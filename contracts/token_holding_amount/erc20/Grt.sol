@@ -17,9 +17,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.8;
 
-import { ERC20 } from "../ERC20.sol";
 import "../../libraries/Identities.sol";
-import "../../libraries/Constants.sol";
+import "../Constants.sol";
 
 library Grt {
 	function getTokenBscAddress() internal pure returns (string memory) {

@@ -18,23 +18,36 @@
 
 pragma solidity ^0.8.8;
 
-import "../Constants.sol";
-
-library Cats {
-	function getTokenName() internal pure returns (string memory) {
-		return "cats";
+import "../libraries/Http.sol";
+import "../libraries/Utils.sol";
+library GeniidataClient {
+	function getTokenDecimals() internal pure returns (uint8) {
+		return 18;
 	}
 
-	function getTokenRanges() internal pure returns (uint256[] memory) {
-		uint256[] memory ranges = new uint256[](8);
-		ranges[0] = 0 * Constants.decimals_factor;
-		ranges[1] = 1 * Constants.decimals_factor;
-		ranges[2] = 10000 * Constants.decimals_factor;
-		ranges[3] = 50000 * Constants.decimals_factor;
-		ranges[4] = 100000 * Constants.decimals_factor;
-		ranges[5] = 200000 * Constants.decimals_factor;
-		ranges[6] = 500000 * Constants.decimals_factor;
-		ranges[7] = 800000 * Constants.decimals_factor;
-		return ranges;
+	function getTokenBalance(
+		string[] memory secrets,
+		string memory url
+	) internal returns (uint256) {
+		HttpHeader[] memory headers = new HttpHeader[](1);
+		headers[0] = HttpHeader("api-key", secrets[0]);
+
+		// https://geniidata.readme.io/reference/get-brc20-tick-list-copy
+		(bool success, string memory value) = Http.GetString(
+			url,
+			"/data/list/0/available_balance",
+			headers
+		);
+
+		if (success) {
+			(bool parseDecimalSuccess, uint256 result) = Utils.parseDecimal(
+				value,
+				getTokenDecimals()
+			);
+			if (parseDecimalSuccess) {
+				return result;
+			}
+		}
+		return 0;
 	}
 }
