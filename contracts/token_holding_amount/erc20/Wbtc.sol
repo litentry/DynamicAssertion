@@ -53,4 +53,11 @@ library Wbtc {
 
 		return ranges;
 	}
+	function getTokenNetworks() internal pure returns (uint32[] memory) {
+		uint32[] memory networks = new uint32[](2);
+		networks[0] = Web3Networks.Ethereum;
+		networks[1] = Web3Networks.Bsc;
+
+		return networks;
+	}
 }

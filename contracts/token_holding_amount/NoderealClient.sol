@@ -21,14 +21,18 @@ pragma solidity ^0.8.8;
 import "../libraries/Http.sol";
 import "../libraries/Utils.sol";
 library NoderealClient {
-
 	function getTokenBalance(
 		string memory url,
+		string[] memory secrets,
 		string memory tokenContractAddress,
 		string memory account
 	) internal returns (bool, uint256) {
 		HttpHeader[] memory headers = new HttpHeader[](0);
 		string memory request;
+
+		string memory encodePackedUrl = string(
+			abi.encodePacked(url, secrets[0])
+		);
 		if (
 			keccak256(bytes(tokenContractAddress)) == keccak256("Native Token")
 		) {
@@ -55,7 +59,7 @@ library NoderealClient {
 			return (false, 0);
 		}
 		(bool result, string memory balance) = Http.PostString(
-			url,
+			encodePackedUrl,
 			"/result",
 			request,
 			headers

@@ -21,20 +21,28 @@ pragma solidity ^0.8.8;
 import "../libraries/Http.sol";
 import "../libraries/Utils.sol";
 library GeniidataClient {
-	function getTokenDecimals() internal pure returns (uint8) {
-		return 18;
-	}
-
 	function getTokenBalance(
 		string[] memory secrets,
-		string memory url
+		string memory url,
+		string memory identityString,
+		string memory tokenName,
+		uint8 tokenDecimals
 	) internal returns (uint256) {
+		string memory encodePackedUrl = string(
+			abi.encodePacked(
+				url,
+				"?tick=",
+				tokenName,
+				"&address=",
+				identityString
+			)
+		);
 		HttpHeader[] memory headers = new HttpHeader[](1);
-		headers[0] = HttpHeader("api-key", secrets[0]);
+		headers[0] = HttpHeader("api-key", secrets[1]);
 
 		// https://geniidata.readme.io/reference/get-brc20-tick-list-copy
 		(bool success, string memory value) = Http.GetString(
-			url,
+			encodePackedUrl,
 			"/data/list/0/available_balance",
 			headers
 		);
@@ -42,7 +50,7 @@ library GeniidataClient {
 		if (success) {
 			(bool parseDecimalSuccess, uint256 result) = Utils.parseDecimal(
 				value,
-				getTokenDecimals()
+				tokenDecimals
 			);
 			if (parseDecimalSuccess) {
 				return result;

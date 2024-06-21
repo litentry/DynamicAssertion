@@ -26,9 +26,10 @@ import { GeniidataClient } from "./GeniidataClient.sol";
 abstract contract TokenLogic is TokenHoldingAmount {
 	mapping(uint32 => string) internal networkUrls;
 	mapping(uint32 => bool) private queriedNetworks;
-	mapping(uint32 => string) tokenAddresses;
+	mapping(string => mapping(uint32 => string)) tokenAddresses;
 	mapping(string => string) internal tokenBscAddress;
 	mapping(string => string) internal tokenEthereumAddress;
+	mapping(string => uint32[]) internal tokenNetworks;
 
 	constructor() {
 		networkUrls[Web3Networks.Bsc] = "https://bsc-mainnet.nodereal.io/v1/"; // test against mock server => "http://localhost:19527/nodereal_jsonrpc/"
@@ -55,36 +56,26 @@ abstract contract TokenLogic is TokenHoldingAmount {
 		(bool identityToStringSuccess, string memory identityString) = Utils
 			.identityToString(network, identity.value);
 
-		tokenAddresses[Web3Networks.Bsc] = tokenBscAddress[tokenName];
-		tokenAddresses[Web3Networks.Ethereum] = tokenEthereumAddress[tokenName];
 		if (identityToStringSuccess) {
 			string memory url;
-			uint32[] memory networks = getTokenNetworks();
+			uint32[] memory networks = tokenNetworks[tokenName];
 			uint256 totalBalance = 0;
 
 			for (uint32 i = 0; i < networks.length; i++) {
 				// Check if this network has been queried
+				url = networkUrls[networks[i]];
+
 				if (!queriedNetworks[networks[i]]) {
 					string memory _tokenContractAddress = tokenAddresses[
-						networks[i]
-					];
-					url = string(
-						abi.encodePacked(networkUrls[networks[i]], secrets[0])
-					);
-
+						tokenName
+					][networks[i]];
 					if (networks[i] == Web3Networks.BitcoinP2tr) {
-						url = string(
-							abi.encodePacked(
-								networkUrls[networks[i]],
-								"?tick=",
-								tokenName,
-								"&address=",
-								identityString
-							)
-						);
 						uint256 balance = GeniidataClient.getTokenBalance(
 							secrets,
-							url
+							url,
+							identityString,
+							tokenName,
+							getTokenDecimals()
 						);
 						totalBalance += balance;
 					} else if (
@@ -94,6 +85,7 @@ abstract contract TokenLogic is TokenHoldingAmount {
 						(bool success, uint256 balance) = NoderealClient
 							.getTokenBalance(
 								url,
+								secrets,
 								_tokenContractAddress,
 								identityString
 							);
@@ -110,18 +102,12 @@ abstract contract TokenLogic is TokenHoldingAmount {
 		return 0;
 	}
 
-	function getTokenNetworks() internal pure returns (uint32[] memory) {
-		uint32[] memory networks = new uint32[](3);
-		networks[0] = Web3Networks.Ethereum;
-		networks[1] = Web3Networks.Bsc;
-		networks[2] = Web3Networks.BitcoinP2tr;
-		// Add more networks as needed
-		return networks;
-	}
-
 	function isSupportedNetwork(
 		uint32 network
 	) internal pure override returns (bool) {
-		return network == Web3Networks.Bsc || network == Web3Networks.Ethereum||network == Web3Networks.BitcoinP2tr;
+		return
+			network == Web3Networks.Bsc ||
+			network == Web3Networks.Ethereum ||
+			network == Web3Networks.BitcoinP2tr;
 	}
 }
