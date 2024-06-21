@@ -24,7 +24,6 @@ import "../libraries/AssertionLogic.sol";
 import "../libraries/Identities.sol";
 import "../DynamicAssertion.sol";
 import "./Constants.sol";
-
 abstract contract TokenHoldingAmount is DynamicAssertion {
 	mapping(string => string) internal tokenNames;
 	mapping(string => uint256[]) internal tokenRanges;

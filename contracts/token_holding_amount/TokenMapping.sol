@@ -18,7 +18,7 @@
 
 pragma solidity ^0.8.8;
 
-import { TokenLogic } from "./TokenLogic.sol";
+import { TokenQueryLogic } from "./TokenQueryLogic.sol";
 import "../libraries/Identities.sol";
 
 // brc20
@@ -70,7 +70,7 @@ import { Usdt } from "./erc20/Usdt.sol";
 import { Wbtc } from "./erc20//Wbtc.sol";
 import { Cvx } from "./erc20/Cvx.sol";
 import { Usdd } from "./erc20/Usdd.sol";
-contract TokenMapping is TokenLogic {
+contract TokenMapping is TokenQueryLogic {
 	constructor() {
 		// btcs
 		tokenNames["btcs"] = Btcs.getTokenName();
