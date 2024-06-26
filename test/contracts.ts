@@ -1,0 +1,27 @@
+import { ethers, network } from "hardhat"
+import { expect } from "chai"
+// todo: add more tests
+describe("contracts", () => {
+	it("should return the bytecode of the contracts", async () => {
+		const TokenMapping = await ethers.getContractFactory("TokenMapping")
+		const tokenMapping = await TokenMapping.deploy()
+
+		const identities = [
+			{
+				identity_type: 4,
+				value: "0xf7764F15Fd4F695fAD8dDd3e84F5293E6866FEFE",
+				networks: [7, 8],
+			},
+		]
+
+		const secrets = [
+			"0x23875d191b5cf587d54763ec32be12e64fdb2fe286ae32bd593d461c1d97a5389a1eae28845e3771ba49ed80e20aa4698f7c096156f91d2356f399e0a2e8789f63046fde437cb0ac9ba83e0dd6c1cb676d8411b94e91457870e37d4c8ca627ff04eb7daa1269044c64347bcf2d4619f27affb99fbd74d48fd31a7b4098655312fd69f1473fe3252a07f7080a0c41b5907e008d1456b2fcd73ce61273f131cd0ca5d632ea66c0bb4e8b6518d7cd3aea6300ab2ab995eccaafe73014302e848e023785463d2e5beb9050070f08213606166da439f5f5727b78ab557b41a3863512d23cf216e69d0e48a104354f4641150f84af53a6195a9c5439b7b40786876726a7972d74254b7160d2e484cb5f682eb74e83e94cf4500207bc256b99e5b7f916e0199d522e5ed8802760630e77d60dc7fa543beaffcd92623799ca5eecd7a7a0dde76e781a4ec76dea878fb0e3b67d192d0296ef7841abec0feefa5b5f3cfd73aa9759a1d2dc57b38f9c84ff590a9ecc48dbdb810d697fec159e0d1e124d6151",
+		]
+
+		const params =
+			"0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000036574630000000000000000000000000000000000000000000000000000000000"
+		const tx = await tokenMapping.execute(identities, secrets, params)
+
+		await tx.wait()
+	})
+})
