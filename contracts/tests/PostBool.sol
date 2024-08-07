@@ -21,26 +21,26 @@ pragma solidity ^0.8.8;
 import "../libraries/Http.sol";
 
 contract PostBool {
-	function callPostBool(
-		string memory url,
-		string memory jsonPointer,
-		string memory payload
-	) public returns (bool, bool) {
-		HttpHeader[] memory headers = new HttpHeader[](0);
-		return Http.PostBool(url, jsonPointer, payload, headers);
-	}
+    function callPostBool(
+        string memory url,
+        string memory jsonPointer,
+        string memory payload
+    ) public returns (bool, bool) {
+        HttpHeader[] memory headers = new HttpHeader[](0);
+        return Http.PostBool(url, jsonPointer, payload, headers);
+    }
 
-	function callPostBoolTwiceAndReturnSecondResult(
-		string memory firstUrl,
-		string memory firstJsonPointer,
-		string memory firstPayload,
-		string memory secondUrl,
-		string memory secondJsonPointer,
-		string memory secondPayload
-	) public returns (bool, bool) {
-		HttpHeader[] memory headers = new HttpHeader[](0);
-		Http.PostBool(firstUrl, firstJsonPointer, firstPayload, headers);
-		return
-			Http.PostBool(secondUrl, secondJsonPointer, secondPayload, headers);
-	}
+    function callPostBoolTwiceAndReturnSecondResult(
+        string memory firstUrl,
+        string memory firstJsonPointer,
+        string memory firstPayload,
+        string memory secondUrl,
+        string memory secondJsonPointer,
+        string memory secondPayload
+    ) public returns (bool, bool) {
+        HttpHeader[] memory headers = new HttpHeader[](0);
+        Http.PostBool(firstUrl, firstJsonPointer, firstPayload, headers);
+        return
+            Http.PostBool(secondUrl, secondJsonPointer, secondPayload, headers);
+    }
 }
