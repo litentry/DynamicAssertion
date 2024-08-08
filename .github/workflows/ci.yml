@@ -34,27 +34,36 @@ jobs:
 
             - name: Install deps
               run: |
-                  npm install
+                  corepack enable && corepack enable pnpm
 
             - name: Fmt check
               run: |
-                  npm run fmt-check
+                  pnpm run fmt-check
 
-    compile-tests:
+    contracts-uint-tests:
         runs-on: ubuntu-latest
         needs:
-            - fmt
+            - set-env
         steps:
             - uses: actions/checkout@v4
 
-            - name: Install deps
+            - name: Run contracts unit tests
               run: |
-                  npm install
+                  npx hardhat test
 
-            - name: Compile solidity
-              run: |
-                  npm run compile
+    integration-tests:
+        runs-on: ubuntu-latest
+        needs:
+            - set-env
+        steps:
+            - uses: actions/checkout@v4
 
-            - name: Run hardhat test
+            - name: Pull litentry image optionally
               run: |
-                  npm run test:all
+                docker pull parity/polkadot
+                docker pull litentry/identity-worker:latest
+                docker pull litentry/identity-cli:latest
+                docker pull litentry/litentry-parachain:latest
+
+            - run: docker images --all
+
