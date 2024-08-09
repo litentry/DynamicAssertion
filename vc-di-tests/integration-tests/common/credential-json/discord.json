@@ -5,7 +5,11 @@
         "description": "You have commented in Litentry Discord #🪂id-hubber channel. Channel link: https://discord.com/channels/807161594245152800/1093886939746291882",
         "assertion": {
             "id": "A3",
-            "payload": ["807161594245152800", "1093886939746291882", "1088092822592307240"]
+            "payload": [
+                "807161594245152800",
+                "1093886939746291882",
+                "1088092822592307240"
+            ]
         },
         "dataProvider": "discord",
         "network": "discord",

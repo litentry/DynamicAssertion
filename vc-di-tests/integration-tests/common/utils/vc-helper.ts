@@ -5,7 +5,8 @@ export const mockBatchAssertion = [
         assertion: [{ A7: '5' }, { A8: ['Litentry'] }, { A20: 'A20' }],
     },
     {
-        description: 'Have identified at least one account/address in both Web2 and Web3.',
+        description:
+            'Have identified at least one account/address in both Web2 and Web3.',
         assertion: {
             A1: 'A1',
         },
@@ -30,12 +31,13 @@ export const mockBatchAssertion = [
             A4: '10',
         },
     },
-];
+]
 
 // https://github.com/litentry/litentry-parachain/tree/dev/tee-worker/litentry/core/assertion-build/src
 export const mockAssertions = [
     {
-        description: 'Have identified at least one account/address in both Web2 and Web3.',
+        description:
+            'Have identified at least one account/address in both Web2 and Web3.',
         assertion: {
             A1: 'A1',
         },
@@ -91,7 +93,8 @@ export const mockAssertions = [
         },
     },
     {
-        description: 'The class of year that Ethereum account was created (must have on-chain records)',
+        description:
+            'The class of year that Ethereum account was created (must have on-chain records)',
         assertion: {
             Achainable: {
                 ClassOfYear: {
@@ -152,7 +155,8 @@ export const mockAssertions = [
         },
     },
     {
-        description: 'The user has participated in any Polkadot on-chain governance events',
+        description:
+            'The user has participated in any Polkadot on-chain governance events',
         assertion: {
             A14: [],
         },
@@ -190,7 +194,8 @@ export const mockAssertions = [
     },
     // OneBlock
     {
-        description: 'A participant to the course co-created by OneBlock+ and Parity',
+        description:
+            'A participant to the course co-created by OneBlock+ and Parity',
         assertion: {
             Oneblock: 'CourseCompletion',
         },
@@ -345,4 +350,4 @@ export const mockAssertions = [
             WeirdoGhostGangHolder: [],
         },
     },
-];
+]

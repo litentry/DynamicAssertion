@@ -89,4 +89,3 @@ jobs:
               run: |
                   corepack enable && corepack enable pnpm && pnpm install --no-frozen-lockfile
                   pnpm run test assertion_contracts.test.ts
-                  

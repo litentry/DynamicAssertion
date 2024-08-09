@@ -1,59 +1,67 @@
-import { randomBytes, KeyObject } from 'crypto';
-import { step } from 'mocha-steps';
-import { buildValidations, initIntegrationTestContext } from './common/utils';
-import { assertIsInSidechainBlock, assertVc } from './common/utils/assertion';
+import { randomBytes, KeyObject } from 'crypto'
+import { step } from 'mocha-steps'
+import { buildValidations, initIntegrationTestContext } from './common/utils'
+import { assertIsInSidechainBlock, assertVc } from './common/utils/assertion'
 import {
     getSidechainNonce,
     getTeeShieldingKey,
     sendRequestFromTrustedCall,
     createSignedTrustedCallRequestVc,
     createSignedTrustedCallLinkIdentity,
-} from './common/di-utils'; // @fixme move to a better place
-import type { IntegrationTestContext } from './common/common-types';
-import { aesKey } from './common/call';
-import type { CorePrimitivesIdentity, LitentryValidationData, Web3Network } from '@litentry/parachain-api';
-import fs from 'fs';
-import path from 'path';
-import { assert } from 'chai';
-import { genesisSubstrateWallet } from './common/helpers';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { subscribeToEvents } from './common/transactions';
-import { encryptWithTeeShieldingKey } from './common/utils/crypto';
-import { ethers } from 'ethers';
-import { sleep } from './common/utils';
-import { Bytes, Vec } from '@polkadot/types-codec';
+} from './common/di-utils' // @fixme move to a better place
+import type { IntegrationTestContext } from './common/common-types'
+import { aesKey } from './common/call'
+import type {
+    CorePrimitivesIdentity,
+    LitentryValidationData,
+    Web3Network,
+} from '@litentry/parachain-api'
+import fs from 'fs'
+import path from 'path'
+import { assert } from 'chai'
+import { genesisSubstrateWallet } from './common/helpers'
+import { KeyringPair } from '@polkadot/keyring/types'
+import { subscribeToEvents } from './common/transactions'
+import { encryptWithTeeShieldingKey } from './common/utils/crypto'
+import { ethers } from 'ethers'
+import { sleep } from './common/utils'
+import { Bytes, Vec } from '@polkadot/types-codec'
 
 describe('Test Vc (direct request)', function () {
-    let context: IntegrationTestContext = undefined as any;
-    let teeShieldingKey: KeyObject = undefined as any;
-    let aliceSubstrateIdentity: CorePrimitivesIdentity = undefined as any;
+    let context: IntegrationTestContext = undefined as any
+    let teeShieldingKey: KeyObject = undefined as any
+    let aliceSubstrateIdentity: CorePrimitivesIdentity = undefined as any
 
-    let alice: KeyringPair = undefined as any;
-    let contractBytecode = undefined as any;
+    let alice: KeyringPair = undefined as any
+    let contractBytecode = undefined as any
     const linkIdentityRequestParams: {
-        nonce: number;
-        identity: CorePrimitivesIdentity;
-        validation: LitentryValidationData;
-        networks: Bytes | Vec<Web3Network>;
-    }[] = [];
-    this.timeout(6000000);
+        nonce: number
+        identity: CorePrimitivesIdentity
+        validation: LitentryValidationData
+        networks: Bytes | Vec<Web3Network>
+    }[] = []
+    this.timeout(6000000)
 
     before(async () => {
         context = await initIntegrationTestContext(
             process.env.WORKER_ENDPOINT!, // @fixme evil assertion; centralize env access
             process.env.NODE_ENDPOINT! // @fixme evil assertion; centralize env access
-        );
-        teeShieldingKey = await getTeeShieldingKey(context);
-        aliceSubstrateIdentity = await context.web3Wallets.substrate.Alice.getIdentity(context);
-        alice = genesisSubstrateWallet('Alice');
-    });
+        )
+        teeShieldingKey = await getTeeShieldingKey(context)
+        aliceSubstrateIdentity =
+            await context.web3Wallets.substrate.Alice.getIdentity(context)
+        alice = genesisSubstrateWallet('Alice')
+    })
 
     step('loading tokenmapping contract bytecode', async function () {
-        const file = path.resolve('./', './contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json');
-        const data = fs.readFileSync(file, 'utf8');
-        contractBytecode = JSON.parse(data).bytecode;
-        assert.isNotEmpty(contractBytecode);
-    });
+        const file = path.resolve(
+            './',
+            './contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json'
+        )
+        const data = fs.readFileSync(file, 'utf8')
+        contractBytecode = JSON.parse(data).bytecode
+        assert.isNotEmpty(contractBytecode)
+    })
 
     // step('deploying tokenmapping contract via parachain pallet', async function () {
     //     const secretValue = 'my-secrets-value';
@@ -160,4 +168,4 @@ describe('Test Vc (direct request)', function () {
     //     await assertIsInSidechainBlock(`${Object.keys(assertion)[0]} requestVcCall`, res);
     //     assertVc(context, aliceSubstrateIdentity, res.value);
     // });
-});
+})
