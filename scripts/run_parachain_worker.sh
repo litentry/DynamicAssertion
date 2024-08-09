@@ -15,11 +15,11 @@ WORKER_BASEDIR="$BASEDIR/worker"
 
 function main {
 
-  PARACHAIN_CONTAINER_ID=$(restart_parachain_services)
-  echo "Waiting 30 seconds for parachain to start..."
+  restart_parachain_services
   sleep 30
-  echo "Showing logs for parachain container:"
-  docker logs $PARACHAIN_CONTAINER_ID
+  CONTAINER_ID=$(docker ps --format "{{.ID}}" --filter "name=para-aio" --latest)
+  echo "Parachain container ID: $CONTAINER_ID"
+  docker logs $CONTAINER_ID
   restart_worker_services
   exit
 }
@@ -56,16 +56,13 @@ function restart_worker_services {
 function restart_parachain_services {
     echo "Restarting parachain services ..."
 
-    CONTAINER_ID=$(docker run -itd \
+    docker run -itd \
     --name para-aio \
     --restart always \
     --net=host \
     --env CHAIN="rococo" \
     --volume /opt/litentry/parachain:/opt/litentry/parachain \
-    litentry/litentry-chain-aio:${PARACHAIN_TAG})
-
-    echo "Parachain container started with ID: $CONTAINER_ID"
-    return "$CONTAINER_ID"
+    litentry/litentry-chain-aio:${PARACHAIN_TAG}
 }
 
 main
