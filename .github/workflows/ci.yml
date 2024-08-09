@@ -85,7 +85,7 @@ jobs:
                   ./scripts/run_parachain_worker.sh
                   docker ps
             - name: Run integration tests
-              working-directory: ./vc-di-tests
+              working-directory: ./vc-di-tests/integration-tests
               run: |
                   corepack enable && corepack enable pnpm && pnpm install --no-frozen-lockfile
                   pnpm run test assertion_contracts.test.ts
