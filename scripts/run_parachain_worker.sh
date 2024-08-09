@@ -2,110 +2,24 @@
 
 set -eo pipefail
 
-# This script is used to perform actions on the target host, including:
-# - generate: generate the systemd service files from the template
-# - restart: restart the parachain, or the worker, or both
-# - upgrade-worker: uprade the worker0 to the rev in local repo
-#
-# TODO:
-# the combinations of flags are not yet well verified/organised, especially the following:
-# --only-worker
-# --build
-# --discard
-
-# ------------------------------
-# path setting
-# ------------------------------
-
-# CONFIG_DIR contains private configs. Need to prepare in advance.
-WKDIR=$(dirname "$(readlink -f "$0")")
-CONFIG_DIR="/opt/worker_configs"
-
-BASEDIR="/opt/litentry"
-DOWNLOAD_BASEDIR="$BASEDIR/download"
-PARACHAIN_BASEDIR="$BASEDIR/parachain"
-WORKER_BASEDIR="$BASEDIR/worker"
-BACKUP_BASEDIR="$BASEDIR/backup"
-LOG_BACKUP_BASEDIR="$BACKUP_BASEDIR/log"
-WORKER_BACKUP_BASEDIR="$BACKUP_BASEDIR/worker"
-RELAYCHAIN_ALICE_BASEDIR="$PARACHAIN_BASEDIR/relay-alice"
-RELAYCHAIN_BOB_BASEDIR="$PARACHAIN_BASEDIR/relay-bob"
-PARACHAIN_ALICE_BASEDIR="$PARACHAIN_BASEDIR/para-alice"
-
-# ------------------------------
-# default arg setting
-# ------------------------------
-
-BUILD=false
-BRANCH="dev"
-DISCARD=false
-WORKER_CONFIG="$CONFIG_DIR/config.json"
-WORKER_ENV="$CONFIG_DIR/worker_env"
-INTEL_KEY="$CONFIG_DIR/key_production.txt"
-INTEL_SPID="$CONFIG_DIR/spid_production.txt"
-CHAIN=rococo
-ONLY_WORKER=false
-PARACHAIN_HOST=localhost
-PARACHAIN_PORT=9944
-COPY_FROM_DOCKER=false
-PRODUCTION=false
-ACTION=
-CHECK=true
-PARACHAIN_TAG=latest
-WORKER_TAG=latest
 # ------------------------------
 # Some global setting
 # ------------------------------
 
 WORKER_COUNT=1
 WORKER_ID=0
-PARACHAIN_ID=
-OLD_MRENCLAVE=
-NEW_MRENCLAVE=
-OLD_SHARD=
-LATEST_FINALIZED_BLOCK=
-RELEASE_VERSION=
-REPO="litentry/litentry-parachain"
-REPO_DIR="/tmp/dev_deploy_src_repo"
-
-VERSION_PATTERN="\bp[0-9]+\.[0-9]+\.[0-9]+-[0-9]+-w[0-9]+\.[0-9]+\.[0-9]+-[0-9]+\b"
-
-SGX_SDK=/opt/intel/sgxsdk
-SGX_ENCLAVE_SIGNER=$SGX_SDK/bin/x64/sgx_sign
-
-# ------------------------------
-# main()
-# ------------------------------
+PARACHAIN_TAG=latest
+WORKER_TAG=latest
+BASEDIR="/opt/litentry"
+WORKER_BASEDIR="$BASEDIR/worker"
 
 function main {
-
-  # # 1/ check if $USER has sudo
-  # if sudo -l -U $USER 2>/dev/null | grep -q 'may run the following'; then
-  #   source "$SGX_SDK/environment"
-  # else
-  #   echo "$USER doesn't have sudo permission"
-  #   exit 1
-  # fi
-
-  # # 2/ create folders if missing
-  # sudo mkdir -p "$BASEDIR"
-  # sudo chown -R $USER:$GROUPS "$BASEDIR"
-  # for d in "$LOG_BACKUP_BASEDIR" "$WORKER_BACKUP_BASEDIR" "$RELAYCHAIN_ALICE_BASEDIR" "$RELAYCHAIN_BOB_BASEDIR" \
-  #   "$PARACHAIN_ALICE_BASEDIR" "$WORKER_BASEDIR"; do
-  #   mkdir -p "$d"
-  # done
-
-  # echo "Worker count: $WORKER_COUNT"
 
   restart_parachain_services
   sleep 30
   restart_worker_services
   exit
 }
-
-# ------------------------------
-# helper functions
-# ------------------------------
 
 function print_divider {
   echo "------------------------------------------------------------"

@@ -5,8 +5,8 @@ import { ApiPromise, WsProvider, Keyring } from '@polkadot/api'
 import { compactStripLength, hexToU8a, u8aToString } from '@polkadot/util'
 import crypto, { KeyObject } from 'crypto'
 
-// TODO use type from parachain-api instead
-// parachain-api using es-module, dynamic using commonjs, cannot import es-module package in commonjs now.
+// TODO use type from @litentry/parachain-api instead
+// @litentry/parachain-api using es-module, dynamic using commonjs, cannot import es-module package in commonjs now.
 const types = {
     WorkerRpcReturnValue: {
         value: 'Vec<u8>',
