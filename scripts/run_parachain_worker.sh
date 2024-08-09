@@ -79,79 +79,27 @@ SGX_ENCLAVE_SIGNER=$SGX_SDK/bin/x64/sgx_sign
 
 function main {
 
-  # 0/ parse command lines
-  # echo "Parsing command line ..."
-#   while [ $# -gt 0 ]; do
-#     case "$1" in
-#       -h|--help)
-#         display_help
-#         exit 0
-#         ;;
-#       --worker-tag)
-#         if [ -z "$2" ] || [[ "$2" == -* ]]; then
-#             echo "Error: missing worker docker tag or code branch for --worker-tag option"
-#             display_help
-#             exit 1
-#         fi
-#         WORKER_TAG="$2"
-#         if [ -z "$2" ] || [[ "$2" == -* ]]; then
-#             echo "Error: missing worker image tag for --worker-tag option"
-#             display_help
-#             exit 1
-#         fi
-#         shift 2
-#         ;;
-#       --worker-id)
-#         if [ -z "$2" ] || [[ "$2" == -* ]]; then
-#             echo "Error: missing worker id for --worker-id option"
-#             display_help
-#             exit 1
-#         fi
-#         WORKER_ID="$2"
-#         shift 2
-#         ;;
-#       --skip-check)
-#         CHECK=false
-#         echo "Skip inspection, please bear the risk yourself!"
-#         shift
-#         ;;
-#       --prod)
-#         PRODUCTION=true
-#         echo "Using production environment parameters."
-#         shift
-#         ;;
-#       restart|upgrade-worker|stop|status)
-#         ACTION="$1"
-#         shift
-#         ;;
-#       *)
-#         echo "Error: unknown option or subcommand $1"
-#         display_help
-#         exit 1
-#         ;;
-#     esac
-#   done
+  # 1/ check if $USER has sudo
+  if sudo -l -U $USER 2>/dev/null | grep -q 'may run the following'; then
+    source "$SGX_SDK/environment"
+  else
+    echo "$USER doesn't have sudo permission"
+    exit 1
+  fi
 
-#   # 1/ check if $USER has sudo
-#   if sudo -l -U $USER 2>/dev/null | grep -q 'may run the following'; then
-#     source "$SGX_SDK/environment"
-#   else
-#     echo "$USER doesn't have sudo permission"
-#     exit 1
-#   fi
+  # 2/ create folders if missing
+  sudo mkdir -p "$BASEDIR"
+  sudo chown -R $USER:$GROUPS "$BASEDIR"
+  for d in "$LOG_BACKUP_BASEDIR" "$WORKER_BACKUP_BASEDIR" "$RELAYCHAIN_ALICE_BASEDIR" "$RELAYCHAIN_BOB_BASEDIR" \
+    "$PARACHAIN_ALICE_BASEDIR" "$WORKER_BASEDIR"; do
+    mkdir -p "$d"
+  done
 
-#   # 2/ create folders if missing
-#   sudo mkdir -p "$BASEDIR"
-#   sudo chown -R $USER:$GROUPS "$BASEDIR"
-#   for d in "$LOG_BACKUP_BASEDIR" "$WORKER_BACKUP_BASEDIR" "$RELAYCHAIN_ALICE_BASEDIR" "$RELAYCHAIN_BOB_BASEDIR" \
-#     "$PARACHAIN_ALICE_BASEDIR" "$WORKER_BASEDIR"; do
-#     mkdir -p "$d"
-#   done
+  echo "Worker count: $WORKER_COUNT"
 
-#   echo "Worker count: $WORKER_COUNT"
-
-  restart_parachain
-
+  restart_parachain_services
+  sleep 30
+  restart_worker_services
   exit
 }
 
@@ -190,7 +138,7 @@ function restart_worker_services {
       litentry/identity-worker:${WORKER_TAG} ${commands[${WORKER_ID}]}
 }
 
-function restart_parachain {
+function restart_parachain_services {
     echo "Restarting parachain services ..."
 
     docker run -itd \
