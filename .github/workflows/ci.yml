@@ -69,6 +69,7 @@ jobs:
 
             - name: Create env file with secrets
               run: |
+                mkdir -p /opt/worker_configs/worker_env
                 echo "export TWITTER_AUTH_TOKEN_V2=${{ secrets.TWITTER_AUTH_TOKEN_V2 }}" >> /opt/worker_configs/worker_env
                 echo "export DISCORD_AUTH_TOKEN=${{ secrets.DISCORD_AUTH_TOKEN }}" >> /opt/worker_configs/worker_env
                 echo "export ACHAINABLE_AUTH_KEY=${{ secrets.ACHAINABLE_AUTH_KEY }}" >> /opt/worker_configs/worker_env
