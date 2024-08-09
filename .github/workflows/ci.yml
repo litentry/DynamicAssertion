@@ -70,14 +70,14 @@ jobs:
             - name: Create env file with secrets
               run: |
                 mkdir -p /opt/worker_configs
-                echo "export TWITTER_AUTH_TOKEN_V2=${{ secrets.TWITTER_AUTH_TOKEN_V2 }}" >> /opt/worker_configs/worker_env
-                echo "export DISCORD_AUTH_TOKEN=${{ secrets.DISCORD_AUTH_TOKEN }}" >> /opt/worker_configs/worker_env
-                echo "export ACHAINABLE_AUTH_KEY=${{ secrets.ACHAINABLE_AUTH_KEY }}" >> /opt/worker_configs/worker_env
-                echo "export ONEBLOCK_NOTION_KEY=${{ secrets.ONEBLOCK_NOTION_KEY }}" >> /opt/worker_configs/worker_env
-                echo "export NODEREAL_API_KEY=${{ secrets.NODEREAL_API_KEY }}" >> /opt/worker_configs/worker_env
-                echo "export GENIIDATA_API_KEY=${{ secrets.GENIIDATA_API_KEY }}" >> /opt/worker_configs/worker_env
-                echo "export MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> /opt/worker_configs/worker_env
-                echo "export MAGIC_CRAFT_API_KEY=${{ secrets.MAGIC_CRAFT_API_KEY }}" >> /opt/worker_configs/worker_env
+                echo "TWITTER_AUTH_TOKEN_V2=${{ secrets.TWITTER_AUTH_TOKEN_V2 }}" >> /opt/worker_configs/worker_env
+                echo "DISCORD_AUTH_TOKEN=${{ secrets.DISCORD_AUTH_TOKEN }}" >> /opt/worker_configs/worker_env
+                echo "ACHAINABLE_AUTH_KEY=${{ secrets.ACHAINABLE_AUTH_KEY }}" >> /opt/worker_configs/worker_env
+                echo "ONEBLOCK_NOTION_KEY=${{ secrets.ONEBLOCK_NOTION_KEY }}" >> /opt/worker_configs/worker_env
+                echo "NODEREAL_API_KEY=${{ secrets.NODEREAL_API_KEY }}" >> /opt/worker_configs/worker_env
+                echo "GENIIDATA_API_KEY=${{ secrets.GENIIDATA_API_KEY }}" >> /opt/worker_configs/worker_env
+                echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> /opt/worker_configs/worker_env
+                echo "MAGIC_CRAFT_API_KEY=${{ secrets.MAGIC_CRAFT_API_KEY }}" >> /opt/worker_configs/worker_env
               shell: bash
 
             - name: Start parachain
