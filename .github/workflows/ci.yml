@@ -87,6 +87,6 @@ jobs:
             - name: Run integration tests
               working-directory: ./vc-di-tests
               run: |
-                  corepack enable && corepack enable pnpm && pnpm install
+                  corepack enable && corepack enable pnpm && pnpm install --no-frozen-lockfile
                   pnpm run test assertion_contracts.test.ts
                   
