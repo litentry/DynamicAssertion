@@ -79,23 +79,23 @@ SGX_ENCLAVE_SIGNER=$SGX_SDK/bin/x64/sgx_sign
 
 function main {
 
-  # 1/ check if $USER has sudo
-  if sudo -l -U $USER 2>/dev/null | grep -q 'may run the following'; then
-    source "$SGX_SDK/environment"
-  else
-    echo "$USER doesn't have sudo permission"
-    exit 1
-  fi
+  # # 1/ check if $USER has sudo
+  # if sudo -l -U $USER 2>/dev/null | grep -q 'may run the following'; then
+  #   source "$SGX_SDK/environment"
+  # else
+  #   echo "$USER doesn't have sudo permission"
+  #   exit 1
+  # fi
 
-  # 2/ create folders if missing
-  sudo mkdir -p "$BASEDIR"
-  sudo chown -R $USER:$GROUPS "$BASEDIR"
-  for d in "$LOG_BACKUP_BASEDIR" "$WORKER_BACKUP_BASEDIR" "$RELAYCHAIN_ALICE_BASEDIR" "$RELAYCHAIN_BOB_BASEDIR" \
-    "$PARACHAIN_ALICE_BASEDIR" "$WORKER_BASEDIR"; do
-    mkdir -p "$d"
-  done
+  # # 2/ create folders if missing
+  # sudo mkdir -p "$BASEDIR"
+  # sudo chown -R $USER:$GROUPS "$BASEDIR"
+  # for d in "$LOG_BACKUP_BASEDIR" "$WORKER_BACKUP_BASEDIR" "$RELAYCHAIN_ALICE_BASEDIR" "$RELAYCHAIN_BOB_BASEDIR" \
+  #   "$PARACHAIN_ALICE_BASEDIR" "$WORKER_BASEDIR"; do
+  #   mkdir -p "$d"
+  # done
 
-  echo "Worker count: $WORKER_COUNT"
+  # echo "Worker count: $WORKER_COUNT"
 
   restart_parachain_services
   sleep 30
