@@ -84,3 +84,9 @@ jobs:
               run: |
                   ./scripts/run_parachain_worker.sh
                   docker ps
+            - name: Run integration tests
+              working-directory: ./vc-di-tests
+              run: |
+                  pnpm install
+                  pnpm run test assertion_contracts.test.ts
+                  
