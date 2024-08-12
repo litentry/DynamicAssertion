@@ -19,7 +19,7 @@ function main {
   sleep 30
   CONTAINER_ID=$(docker ps --format "{{.ID}}" --filter "name=para-aio" --latest)
   echo "Parachain container ID: $CONTAINER_ID"
-  docker logs $CONTAINER_ID
+  docker logs -f $CONTAINER_ID
   restart_worker_services
   exit
 }
