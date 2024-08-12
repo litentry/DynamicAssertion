@@ -14,7 +14,8 @@ BASEDIR="/opt/litentry"
 WORKER_BASEDIR="$BASEDIR/worker"
 
 function main {
-
+  sudo mkdir -p /opt/litentry/parachain
+  sudo chown -R 1000:1000 /opt/litentry/parachain
   restart_parachain_services
   sleep 30
   CONTAINER_ID=$(docker ps --format "{{.ID}}" --filter "name=para-aio" --latest)
