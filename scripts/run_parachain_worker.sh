@@ -16,6 +16,9 @@ WORKER_BASEDIR="$BASEDIR/worker"
 function main {
   sudo mkdir -p /opt/litentry/parachain
   sudo chown -R 1000:1000 /opt/litentry/parachain
+  sudo mkdir -p $WORKER_BASEDIR
+  sudo chown -R 1000:1000 $WORKER_BASEDIR
+
   restart_parachain_services
   sleep 30
   CONTAINER_ID=$(docker ps --format "{{.ID}}" --filter "name=para-aio" --latest)
@@ -48,7 +51,6 @@ function restart_worker_services {
       --env RUST_LOG=info,litentry_worker=debug,ws=warn,sp_io=error,substrate_api_client=warn,itc_parentchain_light_client=info,jsonrpsee_ws_client=warn,jsonrpsee_ws_server=warn,enclave_runtime=debug,ita_stf=debug,its_rpc_handler=warn,itc_rpc_client=warn,its_consensus_common=debug,its_state=warn,its_consensus_aura=warn,aura*=warn,its_consensus_slots=warn,itp_attestation_handler=debug,http_req=debug,lc_mock_server=warn,itc_rest_client=debug,lc_credentials=debug,lc_identity_verification=debug,lc_stf_task_receiver=debug,lc_stf_task_sender=debug,lc_data_providers=debug,itp_top_pool=debug,itc_parentchain_indirect_calls_executor=debug,bc_task_receiver=debug \
       --env DATA_DIR='/data' \
       --env-file /opt/worker_configs/worker_env \
-      --volume /var/run/aesmd:/var/run/aesmd \
       --volume ${WORKER_BASEDIR}/w${WORKER_ID}:/data \
       --workdir /data \
       litentry/identity-worker:${WORKER_TAG} ${commands[${WORKER_ID}]}
