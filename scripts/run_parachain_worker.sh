@@ -24,15 +24,16 @@ function main {
   parachain_container_id=$(docker ps --filter "name=para-aio" --format "{{.ID}}")
   echo "Parachain container ID: $parachain_container_id"
   echo "Showing parachain logs:"
-  docker logs -f --tail 200 $parachain_container_id
-  sleep 300 # wait for parachain to start
+  timeout 300 docker logs -f --tail 200 $parachain_container_id &
 
+  wait
   restart_worker_services
   worker_container_id=$(docker ps --filter "name=litentry-worker-0" --format "{{.ID}}")
   echo "Worker container ID: $worker_container_id"
+  echo "Showing worker logs:"
 
-  docker logs -f --tail 200 $worker_container_id
-  sleep 120 # wait for worker to start
+  docker logs -f --tail 200 $worker_container_id &
+  sleep 300 # wait for worker to start
 
   exit
 }
