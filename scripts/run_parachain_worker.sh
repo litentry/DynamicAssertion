@@ -20,11 +20,15 @@ function main {
   sudo chown -R 1000:1000 $WORKER_BASEDIR
 
   restart_parachain_services
-  sleep 30
+  sleep 300 # wait for parachain to start
   CONTAINER_ID=$(docker ps --format "{{.ID}}" --filter "name=para-aio" --latest)
   echo "Parachain container ID: $CONTAINER_ID"
   docker logs -f $CONTAINER_ID
   restart_worker_services
+  sleep 120 # wait for worker to start
+
+  docker ps
+
   exit
 }
 
