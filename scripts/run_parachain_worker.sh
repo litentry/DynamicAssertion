@@ -12,26 +12,40 @@ PARACHAIN_TAG=latest
 WORKER_TAG=latest
 BASEDIR="/opt/litentry"
 WORKER_BASEDIR="$BASEDIR/worker"
+PARACHAIN_BASEDIR="$BASEDIR/parachain"
 
 function main {
-  sudo mkdir -p /opt/litentry/parachain
-  sudo chown -R 1000:1000 /opt/litentry/parachain
+  sudo mkdir -p $PARACHAIN_BASEDIR
+  sudo chown -R 1000:1000 $PARACHAIN_BASEDIR
   sudo mkdir -p $WORKER_BASEDIR
   sudo chown -R 1000:1000 $WORKER_BASEDIR
 
-  restart_parachain_services
+  PARACHAIN_CONTAINER_ID=$(restart_parachain_services)
+  echo "Parachain container ID: $PARACHAIN_CONTAINER_ID"
   sleep 300 # wait for parachain to start
-  restart_worker_services
+
+  WORKER_CONTAINER_ID=$(restart_worker_services)
+  echo "Worker container ID: $WORKER_CONTAINER_ID"
   sleep 120 # wait for worker to start
 
   docker ps
 
-  exit
+  echo "Showing parachain logs:"
+  docker logs -f $PARACHAIN_CONTAINER_ID &
+  PARACHAIN_LOGS_PID=$!
+
+  echo "Showing worker logs:"
+  docker logs -f $WORKER_CONTAINER_ID &
+  WORKER_LOGS_PID=$!
+
+  sleep 300
+  exit 0
 }
 
 function print_divider {
   echo "------------------------------------------------------------"
 }
+
 function restart_worker_services {
   echo "Restarting worker-${WORKER_ID} services ..."
 
@@ -45,7 +59,7 @@ function restart_worker_services {
       "-T ws:localhost -P 2000 -p 9944 -r 3443 -w 2001 -h 4545 --parentchain-start-block 0 run --skip-ra --dev"
     )
   fi 
-  docker run -itd \
+  docker run -d \
       --name litentry-worker-${WORKER_ID} \
       --restart always \
       --net=host \
@@ -60,12 +74,12 @@ function restart_worker_services {
 function restart_parachain_services {
     echo "Restarting parachain services ..."
 
-    docker run -itd \
+    docker run -d \
     --name para-aio \
     --restart always \
     --net=host \
     --env CHAIN="rococo" \
-    --volume /opt/litentry/parachain:/opt/litentry/parachain \
+    --volume $PARACHAIN_BASEDIR:$PARACHAIN_BASEDIR \
     litentry/litentry-chain-aio:${PARACHAIN_TAG}
 }
 
