@@ -34,7 +34,8 @@ function main {
 
   docker logs -f --tail 200 $worker_container_id &
   sleep 300 # wait for worker to start
-
+  netstat -tuln | grep 9944
+  netstat -tuln | grep 2000
   exit
 }
 
