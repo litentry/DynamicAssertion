@@ -20,26 +20,21 @@ function main {
   sudo mkdir -p $WORKER_BASEDIR
   sudo chown -R 1000:1000 $WORKER_BASEDIR
 
-  PARACHAIN_CONTAINER_ID=$(restart_parachain_services)
-  echo "Parachain container ID: $PARACHAIN_CONTAINER_ID"
+  restart_parachain_services
+  parachain_container_id=$(docker ps --filter "name=para-aio" --format "{{.ID}}")
+  echo "Parachain container ID: $parachain_container_id"
+  echo "Showing parachain logs:"
+  docker logs -f --tail 200 $parachain_container_id
   sleep 300 # wait for parachain to start
 
-  WORKER_CONTAINER_ID=$(restart_worker_services)
-  echo "Worker container ID: $WORKER_CONTAINER_ID"
+  restart_worker_services
+  worker_container_id=$(docker ps --filter "name=litentry-worker-0" --format "{{.ID}}")
+  echo "Worker container ID: $worker_container_id"
+
+  docker logs -f --tail 200 $worker_container_id
   sleep 120 # wait for worker to start
 
-  docker ps
-
-  echo "Showing parachain logs:"
-  docker logs -f $PARACHAIN_CONTAINER_ID &
-  PARACHAIN_LOGS_PID=$!
-
-  echo "Showing worker logs:"
-  docker logs -f $WORKER_CONTAINER_ID &
-  WORKER_LOGS_PID=$!
-
-  sleep 300
-  exit 0
+  exit
 }
 
 function print_divider {
