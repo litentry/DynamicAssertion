@@ -25,7 +25,19 @@ jobs:
               with:
                   node-version: 18
 
-    install-deps:
+    fmt:
+        runs-on: ubuntu-latest
+        needs:
+            - set-env
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Fmt check
+              run: |
+                  corepack enable && corepack enable pnpm && pnpm install --frozen-lockfile
+                  pnpm run check-format
+
+    contracts-uint-tests:
         runs-on: ubuntu-latest
         needs:
             - set-env
@@ -35,41 +47,11 @@ jobs:
             - name: Install deps
               run: |
                   corepack enable && corepack enable pnpm && pnpm install --frozen-lockfile
-
-    fmt:
-        runs-on: ubuntu-latest
-        needs:
-            - set-env
-            - install-deps
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Fmt check
-              run: |
-                  pnpm run check-format
-
-    compile-contracts:
-        runs-on: ubuntu-latest
-        needs:
-            - set-env
-            - install-deps
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Check compile
-              run: |
                   npm install --save-dev hardhat
-                  npx hardhat compile
 
-    contracts-uint-tests:
-        runs-on: ubuntu-latest
-        needs:
-            - set-env
-            - install-deps
-            - compile-contracts
-        steps:
-            - uses: actions/checkout@v4
-
+            - name: Run contracts unit tests
+              run: |
+                  npx hardhat test
             - name: Run contracts unit tests
               run: |
                   npx hardhat test
@@ -77,9 +59,6 @@ jobs:
     integration-tests:
         runs-on: ubuntu-latest
         needs:
-            - set-env
-            - install-deps
-            - compile-contracts
             - contracts-uint-tests
         steps:
             - uses: actions/checkout@v4
