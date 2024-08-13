@@ -56,116 +56,163 @@ describe('Test Vc (direct request)', function () {
     step('loading tokenmapping contract bytecode', async function () {
         const file = path.resolve(
             './',
-            './contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json'
+            '../../artifacts/contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json'
         )
         const data = fs.readFileSync(file, 'utf8')
         contractBytecode = JSON.parse(data).bytecode
         assert.isNotEmpty(contractBytecode)
     })
 
-    // step('deploying tokenmapping contract via parachain pallet', async function () {
-    //     const secretValue = 'my-secrets-value';
-    //     const secretEncoded = context.api.createType('String', secretValue).toU8a();
-    //     const encryptedSecrets = encryptWithTeeShieldingKey(teeShieldingKey, secretEncoded);
+    step(
+        'deploying tokenmapping contract via parachain pallet',
+        async function () {
+            const secretValue = 'my-secrets-value'
+            const secretEncoded = context.api
+                .createType('String', secretValue)
+                .toU8a()
+            const encryptedSecrets = encryptWithTeeShieldingKey(
+                teeShieldingKey,
+                secretEncoded
+            )
 
-    //     const secret = '0x' + encryptedSecrets.toString('hex');
+            const secret = '0x' + encryptedSecrets.toString('hex')
 
-    //     const assertionId = '0x0000000000000000000000000000000000000003';
-    //     const createAssertionEventsPromise = subscribeToEvents('evmAssertions', 'AssertionCreated', context.api);
+            const assertionId = '0x0000000000000000000000000000000000000000'
+            const createAssertionEventsPromise = subscribeToEvents(
+                'evmAssertions',
+                'AssertionCreated',
+                context.api
+            )
 
-    //     const proposal = context.api.tx.evmAssertions.createAssertion(assertionId, contractBytecode, [
-    //         // At least three secrets are required here.
-    //         secret,
-    //         secret,
-    //         secret,
-    //     ]);
-    //     await context.api.tx.developerCommittee.execute(proposal, proposal.encodedLength).signAndSend(alice);
+            const proposal = context.api.tx.evmAssertions.createAssertion(
+                assertionId,
+                contractBytecode,
+                [
+                    // At least three secrets are required here.
+                    secret,
+                    secret,
+                    secret,
+                ]
+            )
+            await context.api.tx.developerCommittee
+                .execute(proposal, proposal.encodedLength)
+                .signAndSend(alice)
 
-    //     const event = (await createAssertionEventsPromise).map((e) => e);
-    //     assert.equal(event.length, 1);
-    // });
+            const event = (await createAssertionEventsPromise).map((e) => e)
+            assert.equal(event.length, 1)
+        }
+    )
 
-    // step('linking identities (alice)', async function () {
-    //     let currentNonce = (await getSidechainNonce(context, aliceSubstrateIdentity)).toNumber();
-    //     const getNextNonce = () => currentNonce++;
-    //     const evmNonce = getNextNonce();
+    step('linking identities (alice)', async function () {
+        let currentNonce = (
+            await getSidechainNonce(context, aliceSubstrateIdentity)
+        ).toNumber()
+        const getNextNonce = () => currentNonce++
+        const evmNonce = getNextNonce()
 
-    //     const evmIdentity = await context.web3Wallets.evm.Alice.getIdentity(context);
-    //     const evmValidation = await buildValidations(
-    //         context,
-    //         aliceSubstrateIdentity,
-    //         evmIdentity,
-    //         evmNonce,
-    //         'ethereum',
-    //         context.web3Wallets.evm.Alice
-    //     );
-    //     const evmNetworks = context.api.createType('Vec<Web3Network>', ['Ethereum', 'Bsc']);
-    //     linkIdentityRequestParams.push({
-    //         nonce: evmNonce,
-    //         identity: evmIdentity,
-    //         validation: evmValidation,
-    //         networks: evmNetworks,
-    //     });
+        const evmIdentity =
+            await context.web3Wallets.evm.Alice.getIdentity(context)
+        const evmValidation = await buildValidations(
+            context,
+            aliceSubstrateIdentity,
+            evmIdentity,
+            evmNonce,
+            'ethereum',
+            context.web3Wallets.evm.Alice
+        )
+        const evmNetworks = context.api.createType('Vec<Web3Network>', [
+            'Ethereum',
+            'Bsc',
+        ])
+        linkIdentityRequestParams.push({
+            nonce: evmNonce,
+            identity: evmIdentity,
+            validation: evmValidation,
+            networks: evmNetworks,
+        })
 
-    //     let counter = 0;
-    //     for (const { nonce, identity, validation, networks } of linkIdentityRequestParams) {
-    //         counter++;
-    //         const requestIdentifier = `0x${randomBytes(32).toString('hex')}`;
-    //         const linkIdentityCall = await createSignedTrustedCallLinkIdentity(
-    //             context.api,
-    //             context.mrEnclave,
-    //             context.api.createType('Index', nonce),
-    //             context.web3Wallets.substrate.Alice,
-    //             aliceSubstrateIdentity,
-    //             identity.toHex(),
-    //             validation.toHex(),
-    //             networks.toHex(),
-    //             context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
-    //             requestIdentifier,
-    //             {
-    //                 withWrappedBytes: false,
-    //                 withPrefix: counter % 2 === 0, // alternate per entry
-    //             }
-    //         );
+        let counter = 0
+        for (const {
+            nonce,
+            identity,
+            validation,
+            networks,
+        } of linkIdentityRequestParams) {
+            counter++
+            const requestIdentifier = `0x${randomBytes(32).toString('hex')}`
+            const linkIdentityCall = await createSignedTrustedCallLinkIdentity(
+                context.api,
+                context.mrEnclave,
+                context.api.createType('Index', nonce),
+                context.web3Wallets.substrate.Alice,
+                aliceSubstrateIdentity,
+                identity.toHex(),
+                validation.toHex(),
+                networks.toHex(),
+                context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
+                requestIdentifier,
+                {
+                    withWrappedBytes: false,
+                    withPrefix: counter % 2 === 0, // alternate per entry
+                }
+            )
 
-    //         const res = await sendRequestFromTrustedCall(context, teeShieldingKey, linkIdentityCall);
-    //         await assertIsInSidechainBlock('linkIdentityCall', res);
-    //     }
-    // });
+            const res = await sendRequestFromTrustedCall(
+                context,
+                teeShieldingKey,
+                linkIdentityCall
+            )
+            await assertIsInSidechainBlock('linkIdentityCall', res)
+        }
+    })
 
-    // step('requesting VC for deployed contract', async function () {
-    //     await sleep(30);
-    //     const requestIdentifier = `0x${randomBytes(32).toString('hex')}`;
-    //     const nonce = (await getSidechainNonce(context, aliceSubstrateIdentity)).toNumber();
+    step('requesting VC for deployed contract', async function () {
+        await sleep(30)
+        const requestIdentifier = `0x${randomBytes(32).toString('hex')}`
+        const nonce = (
+            await getSidechainNonce(context, aliceSubstrateIdentity)
+        ).toNumber()
 
-    //     const abiCoder = new ethers.utils.AbiCoder();
-    //     const encodedData = abiCoder.encode(['string'], ['bnb']);
+        const abiCoder = new ethers.utils.AbiCoder()
+        const encodedData = abiCoder.encode(['string'], ['bnb'])
 
-    //     const assertion = {
-    //         dynamic: context.api.createType('DynamicParams', [
-    //             Uint8Array.from(Buffer.from('0000000000000000000000000000000000000003', 'hex')),
-    //             encodedData,
-    //             true,
-    //         ]),
-    //     };
+        const assertion = {
+            dynamic: context.api.createType('DynamicParams', [
+                Uint8Array.from(
+                    Buffer.from(
+                        '0000000000000000000000000000000000000000',
+                        'hex'
+                    )
+                ),
+                encodedData,
+                true,
+            ]),
+        }
 
-    //     const requestVcCall = await createSignedTrustedCallRequestVc(
-    //         context.api,
-    //         context.mrEnclave,
-    //         context.api.createType('Index', nonce),
-    //         context.web3Wallets.substrate.Alice,
-    //         aliceSubstrateIdentity,
-    //         context.api.createType('Assertion', assertion).toHex(),
-    //         context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
-    //         requestIdentifier,
-    //         {
-    //             withWrappedBytes: false,
-    //             withPrefix: true,
-    //         }
-    //     );
+        const requestVcCall = await createSignedTrustedCallRequestVc(
+            context.api,
+            context.mrEnclave,
+            context.api.createType('Index', nonce),
+            context.web3Wallets.substrate.Alice,
+            aliceSubstrateIdentity,
+            context.api.createType('Assertion', assertion).toHex(),
+            context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
+            requestIdentifier,
+            {
+                withWrappedBytes: false,
+                withPrefix: true,
+            }
+        )
 
-    //     const res = await sendRequestFromTrustedCall(context, teeShieldingKey, requestVcCall);
-    //     await assertIsInSidechainBlock(`${Object.keys(assertion)[0]} requestVcCall`, res);
-    //     assertVc(context, aliceSubstrateIdentity, res.value);
-    // });
+        const res = await sendRequestFromTrustedCall(
+            context,
+            teeShieldingKey,
+            requestVcCall
+        )
+        await assertIsInSidechainBlock(
+            `${Object.keys(assertion)[0]} requestVcCall`,
+            res
+        )
+        assertVc(context, aliceSubstrateIdentity, res.value)
+    })
 })

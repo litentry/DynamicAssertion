@@ -122,16 +122,27 @@ export async function buildWeb2Validation(
         if (config.verificationType === 'PublicMessage') {
             discordValidationData.Web2Validation.Discord = {
                 PublicMessage: {
-                    channel_id: `0x${Buffer.from('919848392035794945', 'utf8').toString('hex')}`,
+                    channel_id: `0x${Buffer.from(
+                        '919848392035794945',
+                        'utf8'
+                    ).toString('hex')}`,
                     message_id: `0x${Buffer.from('1', 'utf8').toString('hex')}`,
-                    guild_id: `0x${Buffer.from(validationNonce.toString(), 'utf8').toString('hex')}`,
+                    guild_id: `0x${Buffer.from(
+                        validationNonce.toString(),
+                        'utf8'
+                    ).toString('hex')}`,
                 },
             }
         } else {
             discordValidationData.Web2Validation.Discord = {
                 OAuth2: {
-                    code: `0x${Buffer.from('test-oauth-code', 'utf8').toString('hex')}`,
-                    redirect_uri: `0x${Buffer.from('http://test-redirect-uri', 'utf8').toString('hex')}`,
+                    code: `0x${Buffer.from('test-oauth-code', 'utf8').toString(
+                        'hex'
+                    )}`,
+                    redirect_uri: `0x${Buffer.from(
+                        'http://test-redirect-uri',
+                        'utf8'
+                    ).toString('hex')}`,
                 },
             }
         }
@@ -150,15 +161,23 @@ export async function buildWeb2Validation(
         if (config.verificationType === 'PublicTweet') {
             twitterValidationData.Web2Validation.Twitter = {
                 PublicTweet: {
-                    tweet_id: `0x${Buffer.from(validationNonce.toString(), 'utf8').toString('hex')}`,
+                    tweet_id: `0x${Buffer.from(
+                        validationNonce.toString(),
+                        'utf8'
+                    ).toString('hex')}`,
                 },
             }
         } else {
             twitterValidationData.Web2Validation.Twitter = {
                 OAuth2: {
-                    code: `0x${Buffer.from('test-oauth-code', 'utf8').toString('hex')}`,
+                    code: `0x${Buffer.from('test-oauth-code', 'utf8').toString(
+                        'hex'
+                    )}`,
                     state: config.oauthState,
-                    redirect_uri: `0x${Buffer.from('http://test-redirect-uri', 'utf8').toString('hex')}`,
+                    redirect_uri: `0x${Buffer.from(
+                        'http://test-redirect-uri',
+                        'utf8'
+                    ).toString('hex')}`,
                 },
             }
         }
