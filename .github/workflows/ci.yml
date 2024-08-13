@@ -46,7 +46,6 @@ jobs:
 
             - name: Install deps
               run: |
-                  corepack enable && corepack enable pnpm && pnpm install --frozen-lockfile
                   npm install --save-dev hardhat
 
             - name: Run contracts unit tests
@@ -88,6 +87,12 @@ jobs:
               run: |
                   ./scripts/run_parachain_worker.sh
                   docker ps
+
+            - name: Compile contracts
+              run: |
+                  npm install --save-dev hardhat
+                  npx hardhat compile
+
             - name: Run integration tests
               working-directory: ./vc-di-tests/integration-tests
               run: |
