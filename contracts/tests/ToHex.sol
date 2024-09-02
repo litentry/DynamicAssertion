@@ -21,9 +21,9 @@ pragma solidity ^0.8.8;
 import "../libraries/Utils.sol";
 
 contract ToHex {
-	function callToHex(
-		string memory text
-	) public returns (bool, string memory) {
-		return Utils.toHex(bytes(text));
-	}
+    function callToHex(
+        string memory text
+    ) public returns (bool, string memory) {
+        return Utils.toHex(bytes(text));
+    }
 }

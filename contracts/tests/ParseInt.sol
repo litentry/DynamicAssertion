@@ -21,7 +21,7 @@ pragma solidity ^0.8.8;
 import "../libraries/Utils.sol";
 
 contract ParseInt {
-	function callParseInt(string memory text) public returns (bool, uint256) {
-		return Utils.parseInt(text);
-	}
+    function callParseInt(string memory text) public returns (bool, uint256) {
+        return Utils.parseInt(text);
+    }
 }

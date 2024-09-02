@@ -19,117 +19,117 @@
 pragma solidity ^0.8.8;
 
 library AssertionLogic {
-	enum Op {
-		GreaterThan,
-		LessThan,
-		GreaterEq,
-		LessEq,
-		Equal,
-		NotEq
-	}
+    enum Op {
+        GreaterThan,
+        LessThan,
+        GreaterEq,
+        LessEq,
+        Equal,
+        NotEq
+    }
 
-	struct Condition {
-		string src;
-		Op op;
-		string dst;
-	}
+    struct Condition {
+        string src;
+        Op op;
+        string dst;
+    }
 
-	struct CompositeCondition {
-		Condition[] conditions;
-		bool isAnd; // true for 'And', false for 'Or'
-	}
+    struct CompositeCondition {
+        Condition[] conditions;
+        bool isAnd; // true for 'And', false for 'Or'
+    }
 
-	function addCondition(
-		CompositeCondition memory cc,
-		uint256 i,
-		string memory src,
-		Op op,
-		string memory dst
-	) internal pure {
-		cc.conditions[i] = Condition(src, op, dst);
-	}
+    function addCondition(
+        CompositeCondition memory cc,
+        uint256 i,
+        string memory src,
+        Op op,
+        string memory dst
+    ) internal pure {
+        cc.conditions[i] = Condition(src, op, dst);
+    }
 
-	function andOp(
-		CompositeCondition memory cc,
-		uint256 i,
-		string memory src,
-		Op op,
-		string memory dst
-	) internal pure returns (CompositeCondition memory) {
-		addCondition(cc, i, src, op, dst);
-		cc.isAnd = true;
-		return cc;
-	}
+    function andOp(
+        CompositeCondition memory cc,
+        uint256 i,
+        string memory src,
+        Op op,
+        string memory dst
+    ) internal pure returns (CompositeCondition memory) {
+        addCondition(cc, i, src, op, dst);
+        cc.isAnd = true;
+        return cc;
+    }
 
-	function orOp(
-		CompositeCondition memory cc,
-		uint256 i,
-		string memory src,
-		Op op,
-		string memory dst
-	) internal pure returns (CompositeCondition memory) {
-		addCondition(cc, i, src, op, dst);
-		cc.isAnd = false;
-		return cc;
-	}
+    function orOp(
+        CompositeCondition memory cc,
+        uint256 i,
+        string memory src,
+        Op op,
+        string memory dst
+    ) internal pure returns (CompositeCondition memory) {
+        addCondition(cc, i, src, op, dst);
+        cc.isAnd = false;
+        return cc;
+    }
 
-	function toString(
-		CompositeCondition memory cc
-	) internal pure returns (string memory) {
-		string memory result = "{";
+    function toString(
+        CompositeCondition memory cc
+    ) internal pure returns (string memory) {
+        string memory result = "{";
 
-		if (cc.conditions.length > 0) {
-			result = string(
-				abi.encodePacked(result, cc.isAnd ? '"and":[' : '"or":[')
-			);
-			for (uint256 i = 0; i < cc.conditions.length; i++) {
-				if (i > 0) {
-					result = string(abi.encodePacked(result, ","));
-				}
-				result = string(
-					abi.encodePacked(result, toString(cc.conditions[i]))
-				);
-			}
-			result = string(abi.encodePacked(result, "]"));
-		}
+        if (cc.conditions.length > 0) {
+            result = string(
+                abi.encodePacked(result, cc.isAnd ? '"and":[' : '"or":[')
+            );
+            for (uint256 i = 0; i < cc.conditions.length; i++) {
+                if (i > 0) {
+                    result = string(abi.encodePacked(result, ","));
+                }
+                result = string(
+                    abi.encodePacked(result, toString(cc.conditions[i]))
+                );
+            }
+            result = string(abi.encodePacked(result, "]"));
+        }
 
-		result = string(abi.encodePacked(result, "}"));
+        result = string(abi.encodePacked(result, "}"));
 
-		return result;
-	}
+        return result;
+    }
 
-	function toString(
-		Condition memory condition
-	) internal pure returns (string memory) {
-		return
-			string(
-				abi.encodePacked(
-					'{"src":"',
-					condition.src,
-					'","op":"',
-					operatorToString(condition.op),
-					'","dst":"',
-					condition.dst,
-					'"}'
-				)
-			);
-	}
+    function toString(
+        Condition memory condition
+    ) internal pure returns (string memory) {
+        return
+            string(
+                abi.encodePacked(
+                    '{"src":"',
+                    condition.src,
+                    '","op":"',
+                    operatorToString(condition.op),
+                    '","dst":"',
+                    condition.dst,
+                    '"}'
+                )
+            );
+    }
 
-	function operatorToString(Op op) internal pure returns (string memory) {
-		if (op == Op.Equal) {
-			return "==";
-		} else if (op == Op.GreaterThan) {
-			return ">";
-		} else if (op == Op.LessThan) {
-			return "<";
-		} else if (op == Op.GreaterEq) {
-			return ">=";
-		} else if (op == Op.LessEq) {
-			return "<=";
-		} else if (op == Op.NotEq) {
-			return "!=";
-		}
+    function operatorToString(Op op) internal pure returns (string memory) {
+        if (op == Op.Equal) {
+            return "==";
+        } else if (op == Op.GreaterThan) {
+            return ">";
+        } else if (op == Op.LessThan) {
+            return "<";
+        } else if (op == Op.GreaterEq) {
+            return ">=";
+        } else if (op == Op.LessEq) {
+            return "<=";
+        } else if (op == Op.NotEq) {
+            return "!=";
+        }
 
-		revert("Unsupported operator");
-	}
+        revert("Unsupported operator");
+    }
 }

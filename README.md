@@ -1,55 +1,69 @@
-![Logo](https://avatars.githubusercontent.com/u/51339301?s=200&v=4)
+1. ## Description
 
-## Litentry Dynamic Assertion Contracts
+    Dynamic VC assertion contract written by solidity, using [Hardhat](https://hardhat.org) for compile and test.
 
-This repo is the contracts part separated from the [litentry-parachain](https://github.com/litentry/litentry-parachain).
+    ## Environment setup
 
-## System Requirements
+    - Install [nvm](https://github.com/nvm-sh/nvm)
+    - Inside the repository, run `nvm use` to set the correct Node version.
+        - If the version is not installed, run `nvm install`.
 
--   Node.js
--   Typescript
--   [Hardhat](https://hardhat.org/hardhat-runner/docs/getting-started#overview)
--   Solidity
+    ## Installation
 
-## Configuration
-
--   [Solidity versions](https://hardhat.org/hardhat-runner/docs/advanced/multiple-solidity-versions)
--   [Configuration Variables](https://hardhat.org/hardhat-runner/docs/config#configuration)
-
-## Getting started
-
-1. Install Node V18
-
-2. Clone this repo
-
-3. Switch to the right Node.js version using NVM.
-
-    ```typescript
-    # From the repo's root
+    ```shell
     nvm use
+    corepack enable pnpm
+    pnpm install
     ```
 
-4. Install dependencies with `npm`
+    ## Usage
 
-    ```typescript
-    # From the repo's root
-    npm install
+    ### Compile
+
+    1. Using hardhat.
+
+    ```shell
+    pnpm compile
     ```
 
-5. Compile contracts
+    After compiled, the contract bytecode will generate in file `artifacts/contracts/**/{contractName}.sol/{contractName}.json`, e.g. the bytecode of A1 is in the file `artifacts/contracts/A1.sol/A1.json`.
 
-    ```typescript
-    # From the repo's root
-    npm run compile or npx hardhat compile
+    2. Using [Remix IDE](https://remix.ethereum.org).
+
+    Should use the `dynamic` as your project root path in Remix IDE as below:
+
+    ```shell
+    remixd -s your_repo_path/tee-worker/litentry/core/assertion-build/src/dynamic --remix-ide https://remix.ethereum.org
     ```
 
-    [Compiled directory structure](https://hardhat.org/hardhat-runner/docs/advanced/artifacts#directory-structure)
+    If you have not install remixd before, rub below script to install it.
 
-6. Run ts-tests
-
-    ```typescript
-    # From the repo's root
-    npm run test:all or npx hardhat test
+    ```shell
+    npm install -g @remix-project/remixd
     ```
 
-    [More tesing contracts details](https://hardhat.org/hardhat-runner/docs/guides/test-contracts)
+    ### Testing
+
+    - Test all: `pnpm test`.
+
+    ```shell
+    pnpm test
+    ```
+
+    - Test single file: `pnpm test {testFilePath}`.
+
+    Example:
+
+    ```shell
+    pnpm test tests/token-holding-amount.ts
+    ```
+
+    #### Vc DI tests(integration tests)
+
+    1. Start parachain&&worker
+    2. `pnpm install`
+    3. `pnpm --filter integration-tests run test assertion_contracts.test.ts`
+
+​
+
+​

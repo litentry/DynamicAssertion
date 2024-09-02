@@ -5,7 +5,7 @@ on:
         branches:
             - dev
         paths-ignore:
-            - "**/README.md"
+            - '**/README.md'
     pull_request:
         branches:
             - dev
@@ -32,29 +32,82 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Install deps
-              run: |
-                  npm install
-
             - name: Fmt check
               run: |
-                  npm run fmt-check
+                  corepack enable && corepack enable pnpm && pnpm install --frozen-lockfile
+                  pnpm run check-format
 
-    compile-tests:
+    contracts-uint-tests:
         runs-on: ubuntu-latest
         needs:
-            - fmt
+            - set-env
         steps:
             - uses: actions/checkout@v4
 
             - name: Install deps
               run: |
-                  npm install
+                  npm install --save-dev hardhat
 
-            - name: Compile solidity
+            - name: Run contracts unit tests
               run: |
-                  npm run compile
+                  npx hardhat test
+            - name: Run contracts unit tests
+              run: |
+                  npx hardhat test
 
-            - name: Run hardhat test
+    integration-tests:
+        runs-on: ubuntu-latest
+        needs:
+            - contracts-uint-tests
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Pull litentry image optionally
               run: |
-                  npm run test:all
+                  docker pull litentry/identity-worker:latest
+                  docker pull litentry/identity-cli:latest
+                  docker pull litentry/litentry-chain-aio:latest
+
+            - run: docker images --all
+
+            - name: Create env file with secrets
+              run: |
+                  mkdir -p /opt/worker_configs
+                  echo "TWITTER_AUTH_TOKEN_V2=${{ secrets.TWITTER_AUTH_TOKEN_V2 }}" >> /opt/worker_configs/worker_env
+                  echo "DISCORD_AUTH_TOKEN=${{ secrets.DISCORD_AUTH_TOKEN }}" >> /opt/worker_configs/worker_env
+                  echo "ACHAINABLE_AUTH_KEY=${{ secrets.ACHAINABLE_AUTH_KEY }}" >> /opt/worker_configs/worker_env
+                  echo "ONEBLOCK_NOTION_KEY=${{ secrets.ONEBLOCK_NOTION_KEY }}" >> /opt/worker_configs/worker_env
+                  echo "NODEREAL_API_KEY=${{ secrets.NODEREAL_API_KEY }}" >> /opt/worker_configs/worker_env
+                  echo "GENIIDATA_API_KEY=${{ secrets.GENIIDATA_API_KEY }}" >> /opt/worker_configs/worker_env
+                  echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> /opt/worker_configs/worker_env
+                  echo "MAGIC_CRAFT_API_KEY=${{ secrets.MAGIC_CRAFT_API_KEY }}" >> /opt/worker_configs/worker_env
+              shell: bash
+
+            - name: Start parachain-worker
+              run: |
+                  ./scripts/run_parachain_worker.sh
+                  docker ps
+
+            - name: Compile contracts
+              run: |
+                  npm install --save-dev hardhat
+                  npx hardhat compile
+
+            - name: Run integration tests
+              working-directory: ./vc-di-tests/integration-tests
+              run: |
+                  corepack enable && corepack enable pnpm && pnpm install --no-frozen-lockfile
+                  pnpm run test assertion_contracts.test.ts
+
+            - name: Stop docker
+              run: |
+                  docker rm -f $(docker ps -aq)
+
+            - name: Upload docker logs if test fails
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: integration-tests-docker-logs
+                  path: docker-logs
+                  if-no-files-found: ignore
+                  retention-days: 3

@@ -21,22 +21,22 @@ pragma solidity ^0.8.8;
 import "../libraries/Http.sol";
 
 contract GetString {
-	function callGetString(
-		string memory url,
-		string memory jsonPointer
-	) public returns (bool, string memory) {
-		HttpHeader[] memory headers = new HttpHeader[](0);
-		return Http.GetString(url, jsonPointer, headers);
-	}
+    function callGetString(
+        string memory url,
+        string memory jsonPointer
+    ) public returns (bool, string memory) {
+        HttpHeader[] memory headers = new HttpHeader[](0);
+        return Http.GetString(url, jsonPointer, headers);
+    }
 
-	function callGetStringTwiceAndReturnSecondResult(
-		string memory firstUrl,
-		string memory firstJsonPointer,
-		string memory secondUrl,
-		string memory secondJsonPointer
-	) public returns (bool, string memory) {
-		HttpHeader[] memory headers = new HttpHeader[](0);
-		Http.GetI64(firstUrl, firstJsonPointer, headers);
-		return Http.GetString(secondUrl, secondJsonPointer, headers);
-	}
+    function callGetStringTwiceAndReturnSecondResult(
+        string memory firstUrl,
+        string memory firstJsonPointer,
+        string memory secondUrl,
+        string memory secondJsonPointer
+    ) public returns (bool, string memory) {
+        HttpHeader[] memory headers = new HttpHeader[](0);
+        Http.GetI64(firstUrl, firstJsonPointer, headers);
+        return Http.GetString(secondUrl, secondJsonPointer, headers);
+    }
 }
