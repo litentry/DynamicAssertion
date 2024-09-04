@@ -23,36 +23,33 @@ import { HttpHeader } from "../libraries/Http.sol";
 
 import "hardhat/console.sol";
 
-contract MockHttpGetI64 {
+contract MockHttpGet {
     receive() external payable {}
 
     fallback() external payable {
-        (string memory url, string memory jsonPointer, ) = abi.decode(
-            msg.data,
-            (string, string, HttpHeader[])
-        );
+        (string memory url, ) = abi.decode(msg.data, (string, HttpHeader[]));
 
         bool success = true;
-        uint256 value = 0;
+        string memory value = "";
 
+        // moralis
         if (
             Strings.equal(
                 url,
-                "https://blockchain.info/multiaddr?active=bc1pg6qjsrxwg9cvqx0gxstl0t74ynhs2528t7rp0u7acl6etwn5t6vswxrzpa&n=0"
+                "https://deep-index.moralis.io/api/v2.2/0x50BcC2FEA4A95283b196bdEF4DEa5B27AFD6323c/erc20?chain=polygon&token_addresses[0]=0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b"
             )
         ) {
-            // 0.1(decimal is 8)
-            value = 10000000;
+            value = '[{"token_address":"0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b","balance":"30"}]';
         } else if (
             Strings.equal(
                 url,
-                "https://blockchain.info/multiaddr?active=bc1pqdk57wus42wuh989k3v700n6w584andwg7pvxnrd69ag3rs94cfq40qx2y&n=0"
+                "https://deep-index.moralis.io/api/v2.2/0xbF98D4df371c2dE965a36E02b4c2E0DA89090818/erc20?chain=arbitrum&token_addresses[0]=0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1"
             )
         ) {
-            value = 0;
+            value = '[{"token_address":"0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1","balance":"5"}]';
         }
 
-        console.log("http_get_i64>>", url, jsonPointer, value);
+        console.log("http_get>>", url, value);
 
         bytes memory encodedResult = abi.encode(success, value);
 

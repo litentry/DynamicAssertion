@@ -23,36 +23,43 @@ import { HttpHeader } from "../libraries/Http.sol";
 
 import "hardhat/console.sol";
 
-contract MockHttpGetI64 {
+contract MockJsonGetString {
     receive() external payable {}
 
     fallback() external payable {
-        (string memory url, string memory jsonPointer, ) = abi.decode(
+        (string memory json, string memory pointer) = abi.decode(
             msg.data,
-            (string, string, HttpHeader[])
+            (string, string)
         );
 
         bool success = true;
-        uint256 value = 0;
+        string memory value = "";
 
         if (
             Strings.equal(
-                url,
-                "https://blockchain.info/multiaddr?active=bc1pg6qjsrxwg9cvqx0gxstl0t74ynhs2528t7rp0u7acl6etwn5t6vswxrzpa&n=0"
+                json,
+                '[{"token_address":"0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b","balance":"30"}]'
             )
         ) {
-            // 0.1(decimal is 8)
-            value = 10000000;
+            if (Strings.equal(pointer, "/0/token_address")) {
+                value = "0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b";
+            } else if (Strings.equal(pointer, "/0/balance")) {
+                value = "30";
+            }
         } else if (
             Strings.equal(
-                url,
-                "https://blockchain.info/multiaddr?active=bc1pqdk57wus42wuh989k3v700n6w584andwg7pvxnrd69ag3rs94cfq40qx2y&n=0"
+                json,
+                '[{"token_address":"0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1","balance":"5"}]'
             )
         ) {
-            value = 0;
+            if (Strings.equal(pointer, "/0/token_address")) {
+                value = "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1";
+            } else if (Strings.equal(pointer, "/0/balance")) {
+                value = "5";
+            }
         }
 
-        console.log("http_get_i64>>", url, jsonPointer, value);
+        console.log("json_get_string>>", json, pointer, value);
 
         bytes memory encodedResult = abi.encode(success, value);
 

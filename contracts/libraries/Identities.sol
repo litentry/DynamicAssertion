@@ -248,4 +248,92 @@ library Identities {
         }
         return (false);
     }
+
+    function web3_network_to_chain(
+        uint32 network
+    ) internal pure returns (string memory chain) {
+        if (network == Web3Networks.Polkadot) {
+            chain = "polkadot";
+        } else if (network == Web3Networks.Kusama) {
+            chain = "kusama";
+        } else if (network == Web3Networks.Litentry) {
+            chain = "litentry";
+        } else if (network == Web3Networks.Litmus) {
+            chain = "litmus";
+        } else if (network == Web3Networks.Khala) {
+            chain = "khala";
+        } else if (network == Web3Networks.Ethereum) {
+            chain = "ethereum";
+        } else if (network == Web3Networks.Bsc) {
+            chain = "bsc";
+        } else if (network == Web3Networks.Polygon) {
+            chain = "polygon";
+        } else if (network == Web3Networks.Arbitrum) {
+            chain = "arbitrum";
+        } else if (network == Web3Networks.Solana) {
+            chain = "solana";
+        } else if (network == Web3Networks.Combo) {
+            chain = "combo";
+        }
+    }
+
+    function get_network_name(
+        uint32 network
+    ) internal pure returns (string memory) {
+        if (network == Web3Networks.Polkadot) {
+            return "Polkadot";
+        }
+        if (network == Web3Networks.Kusama) {
+            return "Kusama";
+        }
+        if (network == Web3Networks.Litentry) {
+            return "Litentry";
+        }
+        if (network == Web3Networks.Litmus) {
+            return "Litmus";
+        }
+        if (network == Web3Networks.LitentryRococo) {
+            return "LitentryRococo";
+        }
+        if (network == Web3Networks.Khala) {
+            return "Khala";
+        }
+        if (network == Web3Networks.SubstrateTestnet) {
+            return "SubstrateTestnet";
+        }
+        if (network == Web3Networks.Ethereum) {
+            return "Ethereum";
+        }
+        if (network == Web3Networks.Bsc) {
+            return "Bsc";
+        }
+        if (network == Web3Networks.Polygon) {
+            return "Polygon";
+        }
+        if (network == Web3Networks.Arbitrum) {
+            return "Arbitrum";
+        }
+        if (network == Web3Networks.Solana) {
+            return "Solana";
+        }
+        if (network == Web3Networks.Combo) {
+            return "Combo";
+        }
+        if (network == Web3Networks.BitcoinP2tr) {
+            return "BitcoinP2tr";
+        }
+        if (network == Web3Networks.BitcoinP2pkh) {
+            return "BitcoinP2pkh";
+        }
+        if (network == Web3Networks.BitcoinP2sh) {
+            return "BitcoinP2sh";
+        }
+        if (network == Web3Networks.BitcoinP2wpkh) {
+            return "BitcoinP2wpkh";
+        }
+        if (network == Web3Networks.BitcoinP2wsh) {
+            return "BitcoinP2wsh";
+        }
+        return "";
+    }
 }

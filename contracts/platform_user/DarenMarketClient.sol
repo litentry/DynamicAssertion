@@ -18,21 +18,17 @@
 
 pragma solidity ^0.8.8;
 
-import "../../libraries/Identities.sol";
-import "../Constants.sol";
-import "./BRC20.sol";
+import "../libraries/Http.sol";
+import "../libraries/Utils.sol";
+import "../libraries/Identities.sol";
 
-library Ordi {
-    function getTokenRanges() internal pure returns (TokenInfoRanges memory) {
-        uint256[] memory ranges = new uint256[](8);
-        ranges[0] = 0;
-        ranges[1] = 1;
-        ranges[2] = 5;
-        ranges[3] = 20;
-        ranges[4] = 50;
-        ranges[5] = 100;
-        ranges[6] = 200;
-        ranges[7] = 500;
-        return TokenInfoRanges(ranges, 0);
+library DarenMarketClient {
+    function talentAsset(string memory account) internal returns (bool, bool) {
+        string memory url = "https://daren.market/api/talent-asset?address=";
+
+        url = string(abi.encodePacked(url, account));
+
+        HttpHeader[] memory headers = new HttpHeader[](0);
+        return Http.GetBool(url, "/created", headers);
     }
 }

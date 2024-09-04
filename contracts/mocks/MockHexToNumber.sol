@@ -23,36 +23,30 @@ import { HttpHeader } from "../libraries/Http.sol";
 
 import "hardhat/console.sol";
 
-contract MockHttpGetI64 {
+contract MockHexToNumber {
     receive() external payable {}
 
     fallback() external payable {
-        (string memory url, string memory jsonPointer, ) = abi.decode(
-            msg.data,
-            (string, string, HttpHeader[])
-        );
+        string memory hexString = abi.decode(msg.data, (string));
 
         bool success = true;
         uint256 value = 0;
 
-        if (
-            Strings.equal(
-                url,
-                "https://blockchain.info/multiaddr?active=bc1pg6qjsrxwg9cvqx0gxstl0t74ynhs2528t7rp0u7acl6etwn5t6vswxrzpa&n=0"
-            )
-        ) {
-            // 0.1(decimal is 8)
-            value = 10000000;
-        } else if (
-            Strings.equal(
-                url,
-                "https://blockchain.info/multiaddr?active=bc1pqdk57wus42wuh989k3v700n6w584andwg7pvxnrd69ag3rs94cfq40qx2y&n=0"
-            )
-        ) {
-            value = 0;
+        if (Strings.equal(hexString, "0x1")) {
+            value = 1;
+        } else if (Strings.equal(hexString, "0x2FAF080")) {
+            value = 50 * 10 ** 6;
+        } else if (Strings.equal(hexString, "0x5AF3107A4000")) {
+            value = 1 * 10 ** 14;
+        } else if (Strings.equal(hexString, "0x1BC16D674EC80000")) {
+            value = 2 * 10 ** 18;
+        } else if (Strings.equal(hexString, "0x5150AE84A8CDF00000")) {
+            value = 1500 * 10 ** 18;
+        } else if (Strings.equal(hexString, "0xCB49B44BA602D800000")) {
+            value = 60000 * 10 ** 18;
         }
 
-        console.log("http_get_i64>>", url, jsonPointer, value);
+        console.log("hex_to_number>", hexString, value);
 
         bytes memory encodedResult = abi.encode(success, value);
 
