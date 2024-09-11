@@ -26,7 +26,7 @@ import "hardhat/console.sol";
 
 library DinNFTClient {
     function getTokenBalance(
-        uint8 network,
+        uint32 network,
         string memory identityString,
         string memory tokenName
     ) internal returns (uint256) {
@@ -45,7 +45,7 @@ library DinNFTClient {
         string memory encodePackedUrl = string(
             abi.encodePacked(
                 // test against mock server => "http://localhost:19529/api/1/brc20/balance"
-                "https://din.test.com/node",
+                "https://node.din.lol/api/chipperNode/owned/nodes",
                 "?level=",
                 Strings.toString(dcnPower),
                 "&address=",
@@ -88,7 +88,7 @@ library DinNFTClient {
                     string(bytes.concat(bytes("dcn"), bytes(dcnIndex)))
                 )
             ) {
-                return i + 1;
+                return i;
             }
         }
         return -1;

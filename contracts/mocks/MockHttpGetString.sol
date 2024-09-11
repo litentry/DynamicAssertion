@@ -34,7 +34,7 @@ contract MockHttpGetString {
 
         bool success = true;
         string memory value = "0";
-
+        console.log(url);
         if (
             Strings.equal(
                 url,
@@ -66,14 +66,14 @@ contract MockHttpGetString {
         } else if (
             Strings.equal(
                 url,
-                "https://din.test.com/balance?power=1&address=0x7cdb6e98fd8d8cf3c4acdc86113ae3be8b350794"
+                "https://node.din.lol/api/chipperNode/owned/nodes?level=0&address=0x7cdb6e98fd8d8cf3c4acdc86113ae3be8b350794&chainId=56"
             )
         ) {
             value = "2";
         } else if (
             Strings.equal(
                 url,
-                "https://din.test.com/balance?power=1&address=0xa991a4056d9e69f8236f7c838cc5807bdc6b1019"
+                "https://node.din.lol/api/chipperNode/owned/nodes?level=0&address=0xa991a4056d9e69f8236f7c838cc5807bdc6b1019&chainId=56"
             )
         ) {
             value = "0";

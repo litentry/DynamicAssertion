@@ -452,7 +452,10 @@ describe('TokenHoldingAmount', () => {
         describe('Dcn01', () => {
             const tokenName = 'dcn01'
             const networkClause = {
-                and: [{ src: '$network', op: '==', dst: 'Bsc' }],
+                and: [
+                    { src: '$network', op: '==', dst: 'Bsc' },
+                    { src: '$network', op: '==', dst: 'Ethereum' },
+                ],
             }
             it('should return result false when amount = 0', async () => {
                 const { TokenMapping } = await loadFixture(deployFixture)
