@@ -99,7 +99,10 @@ abstract contract TokenQueryLogic is TokenHoldingAmount {
                     accounts
                 );
                 totalBalance += balance;
-            }
+            } else if (
+                dataProviderType == DataProviderTypes.DinNFTClient &&
+
+            )
             return totalBalance;
         }
         return 0;

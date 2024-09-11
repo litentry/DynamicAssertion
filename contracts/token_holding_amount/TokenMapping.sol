@@ -73,10 +73,15 @@ import { Wbtc } from "./erc20//Wbtc.sol";
 import { Cvx } from "./erc20/Cvx.sol";
 import { Usdd } from "./erc20/Usdd.sol";
 
+import { Dcn01 } from "./dcn/Dcn01.sol";
+import { DCN } from "./dcn/Dcn.sol";
 // btc
 import { Btc } from "./Btc.sol";
 contract TokenMapping is TokenQueryLogic {
     constructor() {
+        //dcn01
+        setTokenInfo("dcn01", Dcn01.getTokenRanges(), DCN.getTokenNetworks());
+
         // btcs
         setTokenInfo("btcs", Btcs.getTokenRanges(), BRC20.getTokenNetworks());
 

@@ -46,4 +46,5 @@ library DataProviderTypes {
     uint8 public constant GeniidataClient = 2;
     uint8 public constant MoralisClient = 3;
     uint8 public constant NoderealClient = 4;
+    uint8 public constant DinNFTClient=5;
 }
