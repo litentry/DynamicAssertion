@@ -74,7 +74,7 @@ import { Cvx } from "./erc20/Cvx.sol";
 import { Usdd } from "./erc20/Usdd.sol";
 
 import { Dcn01 } from "./dcn/Dcn01.sol";
-import { DCN } from "./dcn/Dcn.sol";
+import { DCN } from "./dcn/DCN.sol";
 // btc
 import { Btc } from "./Btc.sol";
 contract TokenMapping is TokenQueryLogic {

@@ -66,6 +66,20 @@ contract MockHttpGetString {
         } else if (
             Strings.equal(
                 url,
+                "https://din.test.com/balance?power=1&address=0x7cdb6e98fd8d8cf3c4acdc86113ae3be8b350794"
+            )
+        ) {
+            value = "2";
+        } else if (
+            Strings.equal(
+                url,
+                "https://din.test.com/balance?power=1&address=0xa991a4056d9e69f8236f7c838cc5807bdc6b1019"
+            )
+        ) {
+            value = "0";
+        } else if (
+            Strings.equal(
+                url,
                 "https://api.geniidata.com/api/1/brc20/balance?tick=ordi&address=parse_decimal_fail"
             )
         ) {

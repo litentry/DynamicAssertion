@@ -25,6 +25,7 @@ import { TokenHoldingAmount } from "./TokenHoldingAmount.sol";
 import { NoderealClient } from "./NoderealClient.sol";
 import { GeniidataClient } from "./GeniidataClient.sol";
 import { BlockchainInfoClient } from "./BlockchainInfoClient.sol";
+import { DinNFTClient } from "./DinNFTClient.sol";
 import "./MoralisClient.sol";
 import "./Constants.sol";
 
@@ -38,7 +39,6 @@ abstract contract TokenQueryLogic is TokenHoldingAmount {
     ) internal override returns (uint256) {
         (bool identityToStringSuccess, string memory identityString) = Utils
             .identityToString(network, identity.value);
-
         if (identityToStringSuccess) {
             uint256 totalBalance = 0;
 
@@ -101,8 +101,11 @@ abstract contract TokenQueryLogic is TokenHoldingAmount {
                 totalBalance += balance;
             } else if (
                 dataProviderType == DataProviderTypes.DinNFTClient &&
-
-            )
+                DinNFTClient.isSupportedNetwork(network)
+            ) {
+                uint256 balance = DinNFTClient.getTokenBalance(network,identityString,tokenName);
+                totalBalance += balance;
+            }
             return totalBalance;
         }
         return 0;

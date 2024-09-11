@@ -60,6 +60,7 @@ export enum PrecompileAddresses {
     IDENTITY_TO_STRING = '0x000000000000000000000000000000000000041C',
     HEX_TO_NUMBER = '0x000000000000000000000000000000000000041D',
     PARSE_DECIMAL = '0x000000000000000000000000000000000000041E',
+    PARSE_INT = '0x000000000000000000000000000000000000041F',
     JSON_GET_ARRAY_LEN = '0x000000000000000000000000000000000000044F',
     JSON_GET_STRING = '0x000000000000000000000000000000000000044C',
 }
@@ -73,6 +74,7 @@ const mockContractAddressMapping: { [key: string]: string } = {
     MockIdentityToString: PrecompileAddresses.IDENTITY_TO_STRING,
     MockHexToNumber: PrecompileAddresses.HEX_TO_NUMBER,
     MockParseDecimal: PrecompileAddresses.PARSE_DECIMAL,
+    MockParseInt: PrecompileAddresses.PARSE_INT,
     MockJsonGetArrayLen: PrecompileAddresses.JSON_GET_ARRAY_LEN,
     MockJsonGetString: PrecompileAddresses.JSON_GET_STRING,
 }
@@ -100,6 +102,7 @@ export async function deployAllMockContracts(): Promise<void> {
     await deployMockContract('MockIdentityToString')
     await deployMockContract('MockHexToNumber')
     await deployMockContract('MockParseDecimal')
+    await deployMockContract('MockParseInt')
     await deployMockContract('MockJsonGetArrayLen')
     await deployMockContract('MockJsonGetString')
 }

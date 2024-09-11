@@ -22,37 +22,45 @@ import "../libraries/Http.sol";
 import "../libraries/Identities.sol";
 import "../libraries/Utils.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "hardhat/console.sol";
 
 library DinNFTClient {
     function getTokenBalance(
-        string memory secret,
+        uint8 network,
         string memory identityString,
-        string memory tokenName,
-        uint8 tokenDecimals
+        string memory tokenName
     ) internal returns (uint256) {
-        int dcnPower = getDcnPowerLevel(tokenName);
+        int256 dcnPower = getDcnPowerLevel(tokenName);
+        string memory chainId;
         if (dcnPower == -1) {
+            return 0;
+        }
+        if(network==Web3Networks.Ethereum){
+            chainId = "1";
+        }else if(network==Web3Networks.Bsc){
+            chainId = "56";
+        }else{
             return 0;
         }
         string memory encodePackedUrl = string(
             abi.encodePacked(
                 // test against mock server => "http://localhost:19529/api/1/brc20/balance"
-                "https://api.geniidata.com/api/1/brc20/balance",
-                "?tick=",
-                dcnPower,
+                "https://din.test.com/node",
+                "?level=",
+                Strings.toString(dcnPower),
                 "&address=",
-                identityString
+                identityString,
+                "&chainId=",
+                chainId
             )
         );
         HttpHeader[] memory headers = new HttpHeader[](1);
-
         // https://geniidata.readme.io/reference/get-brc20-tick-list-copy
         (bool success, string memory value) = Http.GetString(
             encodePackedUrl,
-            "/data/list/0/available_balance",
+            "/data",
             headers
         );
-
         if (success) {
             (bool parseDecimalSuccess, uint256 result) = Utils.parseInt(value);
             if (parseDecimalSuccess) {
@@ -63,21 +71,29 @@ library DinNFTClient {
     }
     function getDcnPowerLevel(
         string memory dcnName
-    ) internal pure returns (int) {
-        for (uint i = 0; i < 10; i++) {
+    ) internal pure returns (int256) {
+        for (int256 i = 0; i < 10; i++) {
             string memory dcnIndex;
+
             if (i < 10) {
-                dcnIndex = "0" + Strings.toString(i);
+                dcnIndex = string(
+                    bytes.concat(bytes("0"), bytes(Strings.toString(i + 1)))
+                );
             } else {
                 dcnIndex = Strings.toString(i);
             }
-            if (Strings.equal(dcnName, "dcn" + dcnIndex)) {
-                return i;
+            if (
+                Strings.equal(
+                    dcnName,
+                    string(bytes.concat(bytes("dcn"), bytes(dcnIndex)))
+                )
+            ) {
+                return i + 1;
             }
         }
         return -1;
     }
     function isSupportedNetwork(uint32 network) internal pure returns (bool) {
-        return network == Web3Networks.Bsc;
+        return network == Web3Networks.Bsc || network == Web3Networks.Ethereum;
     }
 }

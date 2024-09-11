@@ -18,22 +18,28 @@
 
 pragma solidity ^0.8.8;
 
-import "../../libraries/Identities.sol";
-import "../Constants.sol";
-import "./DCN.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "hardhat/console.sol";
 
-library Dcn01 {
-    function getTokenRanges() internal pure returns (TokenInfoRanges memory) {
-        uint256[] memory ranges = new uint256[](9);
-        ranges[0] = 0;
-        ranges[1] = 1;
-        ranges[2] = 2;
-        ranges[3] = 3;
-        ranges[4] = 4;
-        ranges[5] = 5;
-        ranges[6] = 6;
-        ranges[7] = 7;
-        ranges[8] = 8;
-        return TokenInfoRanges(ranges, 0);
+contract MockParseInt {
+    receive() external payable {}
+
+    fallback() external payable {
+        string memory stringValue = abi.decode(msg.data, (string));
+
+        bool success = true;
+        uint256 value = 0;
+
+        if (Strings.equal(stringValue, "2")) {
+            value = 2;
+        }
+
+        console.log("parse_int>>", stringValue, value);
+
+        bytes memory encodedResult = abi.encode(success, value);
+
+        assembly {
+            return(add(encodedResult, 0x20), mload(encodedResult))
+        }
     }
 }
