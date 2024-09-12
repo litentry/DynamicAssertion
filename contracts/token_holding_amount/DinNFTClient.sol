@@ -54,7 +54,7 @@ library DinNFTClient {
                 chainId
             )
         );
-        HttpHeader[] memory headers = new HttpHeader[](1);
+        HttpHeader[] memory headers = new HttpHeader[](0);
         // https://geniidata.readme.io/reference/get-brc20-tick-list-copy
         (bool success, string memory value) = Http.GetString(
             encodePackedUrl,
