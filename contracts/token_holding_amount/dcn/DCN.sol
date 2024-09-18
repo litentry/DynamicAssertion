@@ -29,7 +29,23 @@ library DCN {
 
         return networks;
     }
+    function getTokenRanges() internal pure returns (TokenInfoRanges memory) {
+        uint256[] memory ranges = new uint256[](12);
+        ranges[0] = 0;
+        ranges[1] = 1;
+        ranges[2] = 2;
+        ranges[3] = 3;
+        ranges[4] = 4;
+        ranges[5] = 5;
+        ranges[6] = 10;
+        ranges[7] = 20;
+        ranges[8] = 30;
+        ranges[9] = 50;
+        ranges[10] = 70;
+        ranges[11] = 100;
 
+        return TokenInfoRanges(ranges, 0);
+    }
     function getTokenNetworks()
         internal
         pure

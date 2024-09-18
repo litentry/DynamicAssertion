@@ -44,7 +44,6 @@ library DinNFTClient {
         }
         string memory encodePackedUrl = string(
             abi.encodePacked(
-                // test against mock server => "http://localhost:19529/api/1/brc20/balance"
                 "https://node.din.lol/api/chipperNode/owned/nodes",
                 "?level=",
                 Strings.toString(dcnPower),
@@ -55,7 +54,6 @@ library DinNFTClient {
             )
         );
         HttpHeader[] memory headers = new HttpHeader[](0);
-        // https://geniidata.readme.io/reference/get-brc20-tick-list-copy
         (bool success, string memory value) = Http.GetString(
             encodePackedUrl,
             "/data",

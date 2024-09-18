@@ -245,9 +245,9 @@ async function main() {
     const contract = process.env.CONTRACT as string
     const mnemonic = process.env.MNEMONIC as string
     const secrets = ((process.env.SECRETS as string) ?? '')
-        .split('\n')
+        .split(' ')
         .filter((secret) => !!secret)
-
+    console.log('secrets', secrets)
     if (!SUPPORTED_CHAINS.includes(chain)) {
         throw new Error(
             `Unsupported chain ${chain}, need be one of ${SUPPORTED_CHAINS}.`
