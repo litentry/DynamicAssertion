@@ -522,6 +522,79 @@ describe('TokenHoldingAmount', () => {
                 )
             })
         })
+        describe('Dcn02', () => {
+            const tokenName = 'dcn02'
+            const networkClause = {
+                and: [
+                    { src: '$network', op: '==', dst: 'Bsc' },
+                    { src: '$network', op: '==', dst: 'Ethereum' },
+                ],
+            }
+            it('should return result false when amount = 0', async () => {
+                const { TokenMapping } = await loadFixture(deployFixture)
+                const val = TokenMapping.execute(
+                    // identities
+                    [
+                        {
+                            identity_type: IdentityType.Evm,
+                            value: ethers.toUtf8Bytes(
+                                '0xa991a4056d9e69f8236f7c838cc5807bdc6b1019'
+                            ),
+                            networks: [Web3Network.Bsc],
+                        },
+                    ],
+                    // secrets
+                    secrets,
+                    // params
+                    generateParams(tokenName)
+                )
+                await expectResult(
+                    TokenMapping,
+                    val,
+                    {
+                        and: [
+                            { src: '$token', op: '==', dst: tokenName },
+                            networkClause,
+                            { src: '$holding_amount', op: '>', dst: '0' },
+                        ],
+                    },
+                    false
+                )
+            })
+
+            it('should return result true when amount = 1', async () => {
+                const { TokenMapping } = await loadFixture(deployFixture)
+                const val = TokenMapping.execute(
+                    // identities
+                    [
+                        {
+                            identity_type: IdentityType.Evm,
+                            value: ethers.toUtf8Bytes(
+                                '0x7cdb6e98fd8d8cf3c4acdc86113ae3be8b350794'
+                            ),
+                            networks: [Web3Network.Bsc],
+                        },
+                    ],
+                    // secrets
+                    secrets,
+                    // params
+                    generateParams(tokenName)
+                )
+                await expectResult(
+                    TokenMapping,
+                    val,
+                    {
+                        and: [
+                            { src: '$token', op: '==', dst: tokenName },
+                            networkClause,
+                            { src: '$holding_amount', op: '>=', dst: '1' },
+                            { src: '$holding_amount', op: '<', dst: '2' },
+                        ],
+                    },
+                    true
+                )
+            })
+        })
     })
     describe('ERC20', () => {
         describe('Atom', () => {

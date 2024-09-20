@@ -33,7 +33,9 @@ contract MockParseInt {
         if (Strings.equal(stringValue, "2")) {
             value = 2;
         }
-
+        if (Strings.equal(stringValue, "1")) {
+            value = 1;
+        }
         console.log("parse_int>>", stringValue, value);
 
         bytes memory encodedResult = abi.encode(success, value);

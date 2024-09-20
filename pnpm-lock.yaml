@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   '@litentry/chaindata':
-    specifier: ^0.1.1
-    version: 0.1.1
+    specifier: ^0.3.0
+    version: 0.3.0
   '@nomicfoundation/hardhat-ethers':
     specifier: ^3.0.6
     version: 3.0.6(ethers@6.13.2)(hardhat@2.22.8)
@@ -425,8 +425,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.5.0
     dev: true
 
-  /@litentry/chaindata@0.1.1:
-    resolution: {integrity: sha512-2v2y1teCdA0rrtYvmZE/JDS5rLZTIfQFEnHJU0Y8gsbWOzmFK04VOPFgMZK5hdiSUZKPlshnWqQ9WVLG7AGtBw==}
+  /@litentry/chaindata@0.3.0:
+    resolution: {integrity: sha512-IVgNWk52AMepIP8BlP3DE8yHIQBW15L9gauIn7P5RuOEkI8Tc7uBSFja+RkHCY42D5ULueTOMwEAogRugL5Jdw==}
     dependencies:
       tslib: 2.6.3
     dev: true

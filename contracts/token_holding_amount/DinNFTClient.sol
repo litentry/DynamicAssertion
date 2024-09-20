@@ -35,11 +35,11 @@ library DinNFTClient {
         if (dcnPower == -1) {
             return 0;
         }
-        if(network==Web3Networks.Ethereum){
+        if (network == Web3Networks.Ethereum) {
             chainId = "1";
-        }else if(network==Web3Networks.Bsc){
+        } else if (network == Web3Networks.Bsc) {
             chainId = "56";
-        }else{
+        } else {
             return 0;
         }
         string memory encodePackedUrl = string(
@@ -54,16 +54,13 @@ library DinNFTClient {
             )
         );
         HttpHeader[] memory headers = new HttpHeader[](0);
-        (bool success, string memory value) = Http.GetString(
+        (bool success, int64 value) = Http.GetI64(
             encodePackedUrl,
             "/data",
             headers
         );
         if (success) {
-            (bool parseDecimalSuccess, uint256 result) = Utils.parseInt(value);
-            if (parseDecimalSuccess) {
-                return result;
-            }
+            return uint256(int256(value));
         }
         return 0;
     }
@@ -73,12 +70,12 @@ library DinNFTClient {
         for (int256 i = 0; i < 10; i++) {
             string memory dcnIndex;
 
-            if (i < 10) {
+            if (i < 9) {
                 dcnIndex = string(
                     bytes.concat(bytes("0"), bytes(Strings.toString(i + 1)))
                 );
             } else {
-                dcnIndex = Strings.toString(i);
+                dcnIndex = Strings.toString(i + 1);
             }
             if (
                 Strings.equal(
