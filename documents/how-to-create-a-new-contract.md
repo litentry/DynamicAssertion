@@ -1,4 +1,3 @@
-
 # Basic Contract Template
 
 A new contract must extend DynamicAssertion. Below is the template:
@@ -6,32 +5,32 @@ A new contract must extend DynamicAssertion. Below is the template:
 ```solidity
 pragma solidity ^0.8.8;
 
-import "./libraries/AssertionLogic.sol";
-import "./libraries/Identities.sol";
-import "./DynamicAssertion.sol";
+import './libraries/AssertionLogic.sol';
+import './libraries/Identities.sol';
+import './DynamicAssertion.sol';
 
 contract SampleContract is DynamicAssertion {
     function execute(
         Identity[] memory identities,
-        string[] memory secrets,  // Immutable secret values set at deployment, e.g., API authorization token.
-        bytes memory params       // Additional caller-supplied params, use `abi.decode` to extract values.
+        string[] memory secrets, // Immutable secret values set at deployment, e.g., API authorization token.
+        bytes memory params // Additional caller-supplied params, use `abi.decode` to extract values.
     )
         public
         override
         returns (
-            string memory,        // Description of the assertion.
-            string memory,        // Assertion type.
-            string[] memory,      // Assertions built using composite conditions.
-            string memory,        // JSON schema URL for VC result validation.
-            bool                  // Assertion result.
+            string memory, // Description of the assertion.
+            string memory, // Assertion type.
+            string[] memory, // Assertions built using composite conditions.
+            string memory, // JSON schema URL for VC result validation.
+            bool // Assertion result.
         )
     {
         // Assertion description that decided by you.
-        string memory description = "Some description";
+        string memory description = 'Some description';
         // Assertion type name that decided by you.
-        string memory assertion_type = "Some assertion type";
+        string memory assertion_type = 'Some assertion type';
         // The schema_url is the JSON schema that use to verify your result VC.
-        schema_url = "https://raw.githubusercontent.com/litentry/vc-jsonschema/main/dist/schemas/xxx/xxx.json";
+        schema_url = 'https://raw.githubusercontent.com/litentry/vc-jsonschema/main/dist/schemas/xxx/xxx.json';
 
         // Calculate the result value for your business.
         bool result = true;
@@ -42,9 +41,9 @@ contract SampleContract is DynamicAssertion {
         AssertionLogic.andOp(
             cc,
             0,
-            "$some_key",
+            '$some_key',
             AssertionLogic.Op.Equal,
-            "true"
+            'true'
         );
         string[] memory assertions = new string[](1);
         assertions[0] = AssertionLogic.toString(cc);
@@ -90,17 +89,17 @@ if (success) {
 
 The following HTTP functions are available for use:
 
-- `Http.GetI64(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an I64 value from the response using a JSON pointer.
+-   `Http.GetI64(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an I64 value from the response using a JSON pointer.
 
-- `Http.GetBool(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an Bool value from the response using a JSON pointer.
+-   `Http.GetBool(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an Bool value from the response using a JSON pointer.
 
-- `Http.GetString(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an String value from the response using a JSON pointer.
+-   `Http.GetString(string memory url, string memory jsonPointer, HttpHeader[] memory headers)`: Executes a GET request and retrieves an String value from the response using a JSON pointer.
 
-- `Http.Get(string memory url, HttpHeader[] memory headers)`: Executes a GET request and return a String value.
+-   `Http.Get(string memory url, HttpHeader[] memory headers)`: Executes a GET request and returns a whole response JSON - it can be used later to get data using json pointers. Compared to Get\* functions this is the method to get multiple values from single response.
 
 Similarly, the following POST methods are supported:
 
-- `Http.PostI64`, `Http.PostBool`, `Http.PostString`, and `Http.Post`: These behave the same as their GET counterparts but use POST requests.
+-   `Http.PostI64`, `Http.PostBool`, `Http.PostString`, and `Http.Post`: These behave the same as their GET counterparts but use POST requests.
 
 ### Processing Complex API Responses
 
@@ -110,7 +109,7 @@ Example response:
 
 ```json
 {
-    value: "123456789.123456789"
+    "value": "123456789.123456789"
 }
 ```
 

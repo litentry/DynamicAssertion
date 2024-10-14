@@ -8,82 +8,78 @@ Below is an example VC JSON of token holding amount contract for token **Bean**:
 
 ```json
 {
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://w3id.org/security/suites/ed25519-2020/v1"
-  ],
-  "id": "0x5f18937abbe9a499b79a3751aaaba8cd8d6c89ddbe680f61e96388c26abba0fb",
-  "type": [
-    "VerifiableCredential"
-  ],
-  "credentialSubject": {
-    "id": "did:litentry:evm:0x651614ca9097c5ba189ef85e7851ef9cff592b2c",
-    "description": "The amount of a particular token you are holding",
-    "type": "Token Holding Amount",
-    "assertionText": "",
-    "assertions": [
-      {
-        "and": [
-          {
-            "src": "$token",
-            "op": "==",
-            "dst": "bean"
-          },
-          {
-            "and": [
-              {
-                "src": "$network",
-                "op": "==",
-                "dst": "Bsc"
-              },
-              {
-                "src": "$network",
-                "op": "==",
-                "dst": "Combo"
-              }
-            ]
-          },
-          {
-            "src": "$holding_amount",
-            "op": ">=",
-            "dst": "0"
-          },
-          {
-            "src": "$holding_amount",
-            "op": "<",
-            "dst": "1"
-          }
-        ]
-      }
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/security/suites/ed25519-2020/v1"
     ],
-    "values": [
-      false
-    ],
-    "endpoint": "http://localhost:9933"
-  },
-  "issuer": {
-    "id": "did:litentry:substrate:0xd1903fbb8a5cac3de73c70f33a980e41b938e9a0193f71c353019fd27626d40d",
-    "name": "Litentry TEE Worker",
-    "mrenclave": "AjXWy3vvBSknZJf6NBQ3yV1LriVZQ2DAXEfEgFf5DTjV",
-    "runtimeVersion": {
-      "parachain": 9183,
-      "sidechain": 109
+    "id": "0x5f18937abbe9a499b79a3751aaaba8cd8d6c89ddbe680f61e96388c26abba0fb",
+    "type": ["VerifiableCredential"],
+    "credentialSubject": {
+        "id": "did:litentry:evm:0x651614ca9097c5ba189ef85e7851ef9cff592b2c",
+        "description": "The amount of a particular token you are holding",
+        "type": "Token Holding Amount",
+        "assertionText": "",
+        "assertions": [
+            {
+                "and": [
+                    {
+                        "src": "$token",
+                        "op": "==",
+                        "dst": "bean"
+                    },
+                    {
+                        "and": [
+                            {
+                                "src": "$network",
+                                "op": "==",
+                                "dst": "Bsc"
+                            },
+                            {
+                                "src": "$network",
+                                "op": "==",
+                                "dst": "Combo"
+                            }
+                        ]
+                    },
+                    {
+                        "src": "$holding_amount",
+                        "op": ">=",
+                        "dst": "0"
+                    },
+                    {
+                        "src": "$holding_amount",
+                        "op": "<",
+                        "dst": "1"
+                    }
+                ]
+            }
+        ],
+        "values": [false],
+        "endpoint": "http://localhost:9933"
+    },
+    "issuer": {
+        "id": "did:litentry:substrate:0xd1903fbb8a5cac3de73c70f33a980e41b938e9a0193f71c353019fd27626d40d",
+        "name": "Litentry TEE Worker",
+        "mrenclave": "AjXWy3vvBSknZJf6NBQ3yV1LriVZQ2DAXEfEgFf5DTjV",
+        "runtimeVersion": {
+            "parachain": 9183,
+            "sidechain": 109
+        }
+    },
+    "issuanceDate": "2024-10-01T00:00:00.000000000+00:00",
+    "parachainBlockNumber": 69,
+    "sidechainBlockNumber": 131,
+    "proof": {
+        "created": "2024-10-01T00:00:00.000000000+00:00",
+        "type": "Ed25519Signature2020",
+        "proofPurpose": "assertionMethod",
+        "proofValue": "6aa3d2f00665e61b2d1e8b0eeb621be27abbd54815f4a2dd27a3098d34055c39983b70a4304a3aa10a208def548f581fb0a7f0adf6d8eb17a4c212c55ab0d003",
+        "verificationMethod": "0xa2ff08c95ffb86ae1eeb7b35582f0d2b6bfc6775cd780c4b03f58f72ec6c95f8"
+    },
+    "credentialSchema": {
+        "id": "https://raw.githubusercontent.com/litentry/vc-jsonschema/main/dist/schemas/25-token-holding-amount/1-1-0.json",
+        "type": "JsonSchemaValidator2018"
     }
-  },
-  "issuanceDate": "2024-10-01T00:00:00.000000000+00:00",
-  "parachainBlockNumber": 69,
-  "sidechainBlockNumber": 131,
-  "proof": {
-    "created": "2024-10-01T00:00:00.000000000+00:00",
-    "type": "Ed25519Signature2020",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "6aa3d2f00665e61b2d1e8b0eeb621be27abbd54815f4a2dd27a3098d34055c39983b70a4304a3aa10a208def548f581fb0a7f0adf6d8eb17a4c212c55ab0d003",
-    "verificationMethod": "0xa2ff08c95ffb86ae1eeb7b35582f0d2b6bfc6775cd780c4b03f58f72ec6c95f8"
-  },
-  "credentialSchema": {
-    "id": "https://raw.githubusercontent.com/litentry/vc-jsonschema/main/dist/schemas/25-token-holding-amount/1-1-0.json",
-    "type": "JsonSchemaValidator2018"
-  }
 }
 ```
 
@@ -91,11 +87,11 @@ Below is an example VC JSON of token holding amount contract for token **Bean**:
 
 The VC output fields are mapped to the return values of the `DynamicAssertion.execute` function as follows:
 
-- credentialSubject.description: returnValue[0]
-- credentialSubject.type: returnValue[1]
-- credentialSubject.assertions: returnValue[2]
-- credentialSubject.values[0]: returnValue[4]
-- credentialSchema.id: returnValue[3]
+-   credentialSubject.description: returnValue[0]
+-   credentialSubject.type: returnValue[1]
+-   credentialSubject.assertions: returnValue[2]
+-   credentialSubject.values[0]: returnValue[4]
+-   credentialSchema.id: returnValue[3]
 
 To generate the VC JSON shown in the example, the corresponding return values from the `DynamicAssertion.execute` function should be:
 
@@ -112,7 +108,6 @@ return (
     false                                               // returnValue[4] -> credentialSubject.values[0]
 );
 ```
-
 
 ### DynamicAssertion.execute Definition
 

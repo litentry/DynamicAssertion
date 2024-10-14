@@ -11,8 +11,8 @@ Create a new token configuration library for **Bean**. This will include range a
 ```solidity
 pragma solidity ^0.8.8;
 
-import "../../libraries/Identities.sol";
-import "../Constants.sol";
+import '../../libraries/Identities.sol';
+import '../Constants.sol';
 
 library Bean {
     // Define a range array for assertion clause generation, e.g. $holding_amount > 0, $holding_amount && $holding_amount < 1500, $holding_amount > 50000.
@@ -24,11 +24,10 @@ library Bean {
         ranges[3] = 10000;
         ranges[4] = 50000;
 
-
         return TokenInfoRanges(ranges, 0);
     }
 
-    // Define a token info network array to config token address, data provider and token decimals for current token in different networks. 
+    // Define a token info network array to config token address, data provider and token decimals for current token in different networks.
     function getTokenNetworks()
         internal
         pure
@@ -37,13 +36,13 @@ library Bean {
         TokenInfoNetwork[] memory networks = new TokenInfoNetwork[](2);
         networks[0] = TokenInfoNetwork(
             Web3Networks.Bsc,
-            "0x07da81e9a684ab87fad7206b3bc8d0866f48cc7c", // Token address on BSC
+            '0x07da81e9a684ab87fad7206b3bc8d0866f48cc7c', // Token address on BSC
             DataProviderTypes.NoderealClient, // Data provider
             18 // Token decimals
         );
         networks[1] = TokenInfoNetwork(
             Web3Networks.Combo,
-            "0xba7b9936a965fac23bb7a8190364fa60622b3cff", // Token address on Combo
+            '0xba7b9936a965fac23bb7a8190364fa60622b3cff', // Token address on Combo
             DataProviderTypes.NoderealClient,
             18
         );
@@ -88,10 +87,10 @@ Next, create the **NoderealClient** library to interact with the external API an
 ```solidity
 pragma solidity ^0.8.8;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "../libraries/Http.sol";
-import "../libraries/Identities.sol";
-import "../libraries/Utils.sol";
+import '@openzeppelin/contracts/utils/Strings.sol';
+import '../libraries/Http.sol';
+import '../libraries/Identities.sol';
+import '../libraries/Utils.sol';
 
 library NoderealClient {
     function getTokenBalance(
@@ -107,7 +106,7 @@ library NoderealClient {
             abi.encodePacked(getNetworkUrl(network), secret)
         );
         // For Native Token, call the method: eth_getBalance, if one token is the native token for the current network, the token contract address will be config to `Native Token`.
-        if (Strings.equal(tokenContractAddress, "Native Token")) {
+        if (Strings.equal(tokenContractAddress, 'Native Token')) {
             // Use eth_getBalance method
             request = string(
                 abi.encodePacked(
@@ -132,7 +131,7 @@ library NoderealClient {
         }
         (bool result, string memory balance) = Http.PostString(
             encodePackedUrl,
-            "/result",
+            '/result',
             request,
             headers
         );
@@ -157,11 +156,11 @@ library NoderealClient {
         uint32 network
     ) internal pure returns (string memory url) {
         if (network == Web3Networks.Bsc) {
-            url = "https://bsc-mainnet.nodereal.io/v1/";
+            url = 'https://bsc-mainnet.nodereal.io/v1/';
         } else if (network == Web3Networks.Ethereum) {
-            url = "https://eth-mainnet.nodereal.io/v1/";
+            url = 'https://eth-mainnet.nodereal.io/v1/';
         } else if (network == Web3Networks.Combo) {
-            url = "https://combo-mainnet.nodereal.io/v1/";
+            url = 'https://combo-mainnet.nodereal.io/v1/';
         }
     }
 }
