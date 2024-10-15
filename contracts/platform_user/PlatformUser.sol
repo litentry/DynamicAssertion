@@ -24,11 +24,13 @@ import "../libraries/Identities.sol";
 import "../libraries/Utils.sol";
 import "../DynamicAssertion.sol";
 import "./DarenMarketClient.sol";
+import "./BOPClient.sol";
 
 library PlatformType {
     string public constant KaratDao = "KaratDao";
     string public constant MagicCraft = "MagicCraft";
     string public constant DarenMarket = "DarenMarket";
+    string public constant BOP = "BOP";
 }
 
 contract PlatformUser is DynamicAssertion {
@@ -116,6 +118,11 @@ contract PlatformUser is DynamicAssertion {
             if (success) {
                 isPlatformUser = result;
             }
+        } else if (Strings.equal(platformName, PlatformType.BOP)) {
+            (bool success, bool result) = BOPClient.talentAsset(identityString);
+            if (success) {
+                isPlatformUser = result;
+            }
         }
     }
 
@@ -125,7 +132,8 @@ contract PlatformUser is DynamicAssertion {
         if (
             Strings.equal(platformName, PlatformType.KaratDao) ||
             Strings.equal(platformName, PlatformType.MagicCraft) ||
-            Strings.equal(platformName, PlatformType.DarenMarket)
+            Strings.equal(platformName, PlatformType.DarenMarket) ||
+            Strings.equal(platformName, PlatformType.BOP)
         ) {
             supported = true;
         }
