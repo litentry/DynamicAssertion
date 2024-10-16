@@ -18,6 +18,14 @@ pnpm install
 
 ## Usage
 
+### Develop
+
+1. [How to create a new contract](./documents/how-to-create-a-new-contract.md)
+
+2. [How to add a new token to token holding amount contract](./documents/how-to-add-a-new-token-to-token-holding-amount-contract.md)
+
+3. [What is the structure of vc output](./documents/what-is-the-structure-of-vc-output.md)
+
 ### Compile
 
 1. Using hardhat.
@@ -33,7 +41,7 @@ After compiling, the contract bytecode will generate in file `artifacts/contract
 Should use the `dynamic` as your project root path in Remix IDE as below:
 
 ```shell
-remixd -s your_repo_path/tee-worker/litentry/core/assertion-build/src/dynamic --remix-ide https://remix.ethereum.org
+remixd -s your_repo_path --remix-ide https://remix.ethereum.org
 ```
 
 If you have not installed Remixd before, run the below script to install it.
