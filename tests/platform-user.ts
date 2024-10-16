@@ -175,4 +175,29 @@ describe('PlatformUser', () => {
             await expectDarenMarketResult(PlatformUser, val, true)
         })
     })
+    describe('BOP', () => {
+        const BOPParams = generateParams('BOP')
+
+        const expectBOPResult = (contract: any, val: any, result: boolean) =>
+            expectResult(contract, val, 'BOP', result)
+        it('should return result true if is platform user', async () => {
+            const { PlatformUser } = await loadFixture(deployFixture)
+            const val = PlatformUser.execute(
+                // identities
+                [
+                    {
+                        identity_type: IdentityType.Evm,
+                        value: ethers.toUtf8Bytes(
+                            '0x96aEb2216810C624131c51141da612808103d319'
+                        ),
+                        networks: [Web3Network.Ethereum, Web3Network.Bsc],
+                    },
+                ],
+                [],
+                // params
+                BOPParams
+            )
+            await expectBOPResult(PlatformUser, val, true)
+        })
+    })
 })

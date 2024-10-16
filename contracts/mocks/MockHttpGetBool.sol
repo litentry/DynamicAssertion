@@ -49,6 +49,20 @@ contract MockHttpGetBool {
             )
         ) {
             success = false;
+        } else if (
+            Strings.equal(
+                url,
+                "https://bop.burve.workers.dev/?address=0x96aEb2216810C624131c51141da612808103d319"
+            )
+        ) {
+            value = true;
+        } else if (
+            Strings.equal(
+                url,
+                "https://bop.burve.workers.dev/?address=0xA9d439F4DED81152DB00CB7CD94A8d908FEF903e"
+            )
+        ) {
+            value = false;
         }
 
         console.log("http_get_bool>>", url, jsonPointer, value);
