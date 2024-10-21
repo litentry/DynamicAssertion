@@ -73,7 +73,10 @@ describe('Test Vc (direct request)', function () {
             )
         }
 
-        context = await initIntegrationTestContext(parachainEndpoint)
+        context = await initIntegrationTestContext(
+            parachainEndpoint,
+            process.env.ENCLAVE_ENDPOINT
+        )
         console.log('context', context)
 
         teeShieldingKey = await getTeeShieldingKey(context)
