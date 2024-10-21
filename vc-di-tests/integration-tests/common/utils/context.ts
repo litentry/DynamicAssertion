@@ -74,11 +74,9 @@ export async function initIntegrationTestContext(
         api,
         requestId
     )
-    console.log('sidechainMetaData', sidechainMetaData)
-    console.log('sidechainRegistry', sidechainRegistry)
+
     const { mrEnclave, teeShieldingKey } = await getEnclave(api)
-    console.log('mrEnclave', mrEnclave)
-    console.log('teeShieldingKey', teeShieldingKey)
+
     return {
         tee: wsp,
         api,

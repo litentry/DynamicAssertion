@@ -77,7 +77,6 @@ describe('Test Vc (direct request)', function () {
             parachainEndpoint,
             process.env.ENCLAVE_ENDPOINT
         )
-        console.log('context', context)
 
         teeShieldingKey = await getTeeShieldingKey(context)
         aliceSubstrateIdentity =
