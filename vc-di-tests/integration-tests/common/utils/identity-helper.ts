@@ -64,7 +64,7 @@ export function parseIdGraph(
     const decryptedIdGraph = decryptWithAes(aesKey, idGraphOutput, 'hex')
     const idGraph: [
         CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
+        PalletIdentityManagementTeeIdentityContext
     ][] = sidechainRegistry.createType(
         'Vec<(CorePrimitivesIdentity, PalletIdentityManagementTeeIdentityContext)>',
         decryptedIdGraph

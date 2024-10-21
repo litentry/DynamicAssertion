@@ -21,7 +21,7 @@ import { fail } from 'assert'
 export function assertIdGraph(
     actual: [
         CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
+        PalletIdentityManagementTeeIdentityContext
     ][],
     expected: [CorePrimitivesIdentity, boolean][]
 ) {
@@ -223,7 +223,7 @@ export async function assertIdGraphHash(
     identity: CorePrimitivesIdentity,
     idGraph: [
         CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
+        PalletIdentityManagementTeeIdentityContext
     ][]
 ) {
     const idGraphType = context.sidechainRegistry.createType(
