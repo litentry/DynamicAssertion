@@ -1,8 +1,3 @@
-import {
-    WsProvider,
-    ApiPromise,
-    PalletTeebagEnclave,
-} from '@litentry/parachain-api'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import { hexToString } from '@polkadot/util'
 import WebSocketAsPromised from 'websocket-as-promised'
@@ -17,6 +12,9 @@ import {
     vc,
     trusted_operations,
     sidechain,
+    WsProvider,
+    ApiPromise,
+    PalletTeebagEnclave,
 } from '@litentry/parachain-api'
 import crypto from 'crypto'
 import type { HexString } from '@polkadot/util/types'
@@ -44,7 +42,6 @@ export async function initIntegrationTestContext(
     parachainEndpoint: string,
     enclaveEndpoint?: string
 ): Promise<IntegrationTestContext> {
-    console.log('parachainEndpoint', parachainEndpoint)
     const provider = new WsProvider(parachainEndpoint)
     await cryptoWaitReady()
 
@@ -68,9 +65,9 @@ export async function initIntegrationTestContext(
         ? enclaveEndpoint
         : await getenclaveEndpoint(api)
 
-    console.log('workerEndpoint', workerEndpoint)
-
     const wsp = await initWorkerConnection(workerEndpoint)
+    console.log('workerEndpoint', workerEndpoint)
+    console.log('wsp', wsp)
     const requestId = 1
 
     const { sidechainMetaData, sidechainRegistry } = await getSidechainMetadata(
@@ -78,7 +75,11 @@ export async function initIntegrationTestContext(
         api,
         requestId
     )
+    console.log('sidechainMetaData', sidechainMetaData)
+    console.log('sidechainRegistry', sidechainRegistry)
     const { mrEnclave, teeShieldingKey } = await getEnclave(api)
+    console.log('mrEnclave', mrEnclave)
+    console.log('teeShieldingKey', teeShieldingKey)
     return {
         tee: wsp,
         api,
@@ -91,6 +92,7 @@ export async function initIntegrationTestContext(
         requestId,
     }
 }
+
 async function getenclaveEndpoint(api: ApiPromise): Promise<string> {
     const registry = await api.query.teebag.enclaveRegistry.entries()
     const identityEnclaves = registry.reduce((enclaves, [, enclave]) => {

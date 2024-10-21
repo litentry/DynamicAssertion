@@ -31,8 +31,7 @@ export function describeLitentry(
             //env url
 
             const tmp = await initIntegrationTestContext(
-                process.env.WORKER_ENDPOINT!,
-                process.env.NODE_ENDPOINT!
+                process.env.PARACHAIN_ENDPOINT!
             )
             context.mrEnclave = tmp.mrEnclave
             context.api = tmp.api

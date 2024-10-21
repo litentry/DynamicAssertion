@@ -194,7 +194,7 @@ export const createSignedTrustedGetter = async (
     })
     const payload = blake2AsU8a(getter.toU8a(), 256)
 
-    let signature = await createLitentryMultiSignature(parachainApi, {
+    const signature = await createLitentryMultiSignature(parachainApi, {
         signer,
         payload,
     })
@@ -467,7 +467,6 @@ export const sendRequestFromTrustedCall = async (
     context: IntegrationTestContext,
     teeShieldingKey: KeyObject,
     call: TrustedCallSigned,
-    isVcDirect = false,
     onMessageReceived?: (res: WorkerRpcReturnValue) => void
 ) => {
     // construct trusted operation
@@ -486,8 +485,10 @@ export const sendRequestFromTrustedCall = async (
         hexToU8a(aesKey),
         trustedOperation.toU8a()
     )
+
+    const isRequestVc = call.call.isRequestVc || call.call.isRequestBatchVc
     const request = createJsonRpcRequest(
-        isVcDirect ? 'author_requestVc' : 'author_submitAndWatchAesRequest',
+        isRequestVc ? 'author_requestVc' : 'author_submitAndWatchAesRequest',
         [u8aToHex(requestParam)],
         nextRequestId(context)
     )

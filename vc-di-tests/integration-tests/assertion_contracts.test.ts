@@ -74,6 +74,7 @@ describe('Test Vc (direct request)', function () {
         }
 
         context = await initIntegrationTestContext(parachainEndpoint)
+        console.log('context', context)
 
         teeShieldingKey = await getTeeShieldingKey(context)
         aliceSubstrateIdentity =
