@@ -20,8 +20,13 @@ function main {
   sudo mkdir -p $WORKER_BASEDIR
   sudo chown -R 1000:1000 $WORKER_BASEDIR
 
+  echo "Listing parachain base directory:"
   ls -l $PARACHAIN_BASEDIR
+  echo "Listing worker base directory:"
   ls -l $WORKER_BASEDIR
+  echo "Listing root directory:"
+  ls -l /
+  echo "Done listing"
 
   restart_parachain_services
   parachain_container_id=$(docker ps --filter "name=para-aio" --format "{{.ID}}")
