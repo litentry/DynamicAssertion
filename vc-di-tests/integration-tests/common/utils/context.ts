@@ -1,4 +1,3 @@
-import { WsProvider, ApiPromise } from '@litentry/parachain-api'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import { hexToString } from '@polkadot/util'
 import WebSocketAsPromised from 'websocket-as-promised'
@@ -13,6 +12,9 @@ import {
     vc,
     trusted_operations,
     sidechain,
+    WsProvider,
+    ApiPromise,
+    PalletTeebagEnclave,
 } from '@litentry/parachain-api'
 import crypto from 'crypto'
 import type { HexString } from '@polkadot/util/types'
@@ -37,10 +39,10 @@ export async function initWorkerConnection(
 }
 
 export async function initIntegrationTestContext(
-    workerEndpoint: string,
-    substrateEndpoint: string
+    parachainEndpoint: string,
+    enclaveEndpoint?: string
 ): Promise<IntegrationTestContext> {
-    const provider = new WsProvider(substrateEndpoint)
+    const provider = new WsProvider(parachainEndpoint)
     await cryptoWaitReady()
 
     const web3Wallets = createWeb3Wallets()
@@ -59,6 +61,9 @@ export async function initIntegrationTestContext(
 
     const chainIdentifier = api.registry.chainSS58 as number
 
+    const workerEndpoint = enclaveEndpoint
+        ? enclaveEndpoint
+        : await getenclaveEndpoint(api)
     const wsp = await initWorkerConnection(workerEndpoint)
     const requestId = 1
 
@@ -67,7 +72,9 @@ export async function initIntegrationTestContext(
         api,
         requestId
     )
+
     const { mrEnclave, teeShieldingKey } = await getEnclave(api)
+
     return {
         tee: wsp,
         api,
@@ -79,6 +86,24 @@ export async function initIntegrationTestContext(
         chainIdentifier,
         requestId,
     }
+}
+
+async function getenclaveEndpoint(api: ApiPromise): Promise<string> {
+    const registry = await api.query.teebag.enclaveRegistry.entries()
+    const identityEnclaves = registry.reduce((enclaves, [, enclave]) => {
+        if (enclave.isEmpty || !enclave.unwrap().workerType.isIdentity) {
+            return enclaves
+        }
+        return [...enclaves, enclave.unwrap()]
+    }, [] as PalletTeebagEnclave[])
+
+    if (identityEnclaves.length === 0) {
+        throw new Error('No identity worker found')
+    }
+
+    return identityEnclaves[
+        Math.floor(Math.random() * identityEnclaves.length)
+    ].url.toHuman() as string
 }
 
 export async function getEnclave(api: ApiPromise): Promise<{

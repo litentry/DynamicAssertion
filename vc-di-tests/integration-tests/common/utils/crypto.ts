@@ -266,8 +266,8 @@ export class SolanaSigner implements Signer {
                     isHexString(message)
                         ? hexToU8a(message as HexString)
                         : isString(message)
-                          ? stringToU8a(message)
-                          : message,
+                        ? stringToU8a(message)
+                        : message,
                     this.keypair.secretKey
                 )
             )

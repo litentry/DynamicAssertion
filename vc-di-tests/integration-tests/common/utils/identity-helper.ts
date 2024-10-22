@@ -1,7 +1,6 @@
 import { u8aToHex } from '@polkadot/util'
 import { blake2AsHex } from '@polkadot/util-crypto'
 import type { IntegrationTestContext } from '../common-types'
-import { AesOutput } from '@litentry/parachain-api'
 import { decryptWithAes, Signer } from './crypto'
 import { ethers } from 'ethers'
 import type { TypeRegistry } from '@polkadot/types'
@@ -9,6 +8,7 @@ import type { PalletIdentityManagementTeeIdentityContext } from '@litentry/sidec
 import type {
     LitentryValidationData,
     CorePrimitivesIdentity,
+    AesOutput,
 } from '@litentry/parachain-api'
 import type { HexString } from '@polkadot/util/types'
 
@@ -64,7 +64,7 @@ export function parseIdGraph(
     const decryptedIdGraph = decryptWithAes(aesKey, idGraphOutput, 'hex')
     const idGraph: [
         CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
+        PalletIdentityManagementTeeIdentityContext
     ][] = sidechainRegistry.createType(
         'Vec<(CorePrimitivesIdentity, PalletIdentityManagementTeeIdentityContext)>',
         decryptedIdGraph
@@ -194,11 +194,10 @@ export async function buildValidations(
     signerIdentitity: CorePrimitivesIdentity,
     linkIdentity: CorePrimitivesIdentity,
     startingSidechainNonce: number,
-    network: 'ethereum' | 'substrate' | 'bitcoin' | 'solana',
+    network: 'evm' | 'substrate' | 'bitcoin' | 'solana',
     signer?: Signer,
     options?: { prettifiedMessage?: boolean }
 ): Promise<LitentryValidationData> {
-    const _options = { prettifiedMessage: false, ...options }
     const validationNonce = startingSidechainNonce++
 
     const msg = generateVerificationMessage(
@@ -207,7 +206,7 @@ export async function buildValidations(
         linkIdentity,
         validationNonce
     )
-    if (network === 'ethereum') {
+    if (network === 'evm') {
         const evmValidationData = {
             Web3Validation: {
                 Evm: {
