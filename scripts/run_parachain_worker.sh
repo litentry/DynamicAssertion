@@ -26,6 +26,9 @@ function main {
   ls -l $WORKER_BASEDIR
   echo "Listing /opt/litentry directory:"
   ls -l /opt/litentry
+  ls -l /opt/litentry/worker
+  ls -l /opt/litentry/parachain
+
   echo "Done listing"
 
   restart_parachain_services
