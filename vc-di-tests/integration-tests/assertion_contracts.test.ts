@@ -51,12 +51,14 @@ describe('Test Vc (direct request)', function () {
         validation: LitentryValidationData
         networks: Bytes | Vec<Web3Network>
     }[] = []
-    const chain = byId['litentry-local']
-
+    const chain = byId['litentry-dev']
     const nodeEndpoint: string = chain.rpcs[0].url
     const enclaveEndpoint: string = chain.enclaveRpcs[0].url
-    const teeDevNodePort = 9944
-    const teeDevWorkerPort = 2000
+    console.log(`[node] ${nodeEndpoint}`)
+    console.log(`[worker] ${enclaveEndpoint}`)
+
+    const teeDevNodePort = 443
+    const teeDevWorkerPort = 443
     const { protocol: workerProtocal, hostname: workerHostname } = new URL(
         enclaveEndpoint
     )
