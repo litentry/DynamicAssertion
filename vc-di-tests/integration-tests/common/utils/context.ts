@@ -64,9 +64,7 @@ export async function initIntegrationTestContext(
     const workerEndpoint = enclaveEndpoint
         ? enclaveEndpoint
         : await getenclaveEndpoint(api)
-    console.log('workerEndpoint', workerEndpoint)
     const wsp = await initWorkerConnection(workerEndpoint)
-    console.log('wsp', wsp)
     const requestId = 1
 
     const { sidechainMetaData, sidechainRegistry } = await getSidechainMetadata(
