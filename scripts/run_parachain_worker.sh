@@ -24,8 +24,8 @@ function main {
   ls -l $PARACHAIN_BASEDIR
   echo "Listing worker base directory:"
   ls -l $WORKER_BASEDIR
-  echo "Listing /opt directory:"
-  ls -l /opt
+  echo "Listing /opt/litentry directory:"
+  ls -l /opt/litentry
   echo "Done listing"
 
   restart_parachain_services
