@@ -75,7 +75,7 @@ describe('Test Vc (direct request)', function () {
             )
         }
 
-        context = await initIntegrationTestContext(nodeEndpoint)
+        context = await initIntegrationTestContext(nodeEndpoint,enclaveEndpoint)
 
         teeShieldingKey = await getTeeShieldingKey(context)
         aliceSubstrateIdentity =
