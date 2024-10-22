@@ -99,7 +99,7 @@ describe('Test Vc (direct request)', function () {
 
         try {
             // CLIENT = "$CLIENT_BIN -p $NPORT -P $WORKER1PORT -u $NODEURL -U $WORKER1URL"
-            const commandPromise = zx`${clientDir} -p ${teeDevNodePort} -P ${teeDevWorkerPort} -u ${
+            const commandPromise = zx`docker run litentry/identity-cli:latest -p ${teeDevNodePort} -P ${teeDevWorkerPort} -u ${
                 nodeProtocal + nodeHostname
             } -U ${workerProtocal + workerHostname}\
                   trusted -d link-identity did:litentry:substrate:${formatAddress}\
