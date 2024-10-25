@@ -1,0 +1,24 @@
+[
+    {
+        "index": 0,
+        "contractName": "TokenMapping",
+        "name": "Sats Holding Amount",
+        "parameter": "sats",
+        "network": "bitcoin",
+        "mockDid": "litentry:bitcoin:0x027c5b4fa4aac0696636fed8f91e6037509d5fb489980be15cbe5f5267b5b89314",
+        "mockWeb3Network": "bitcoinp2tr",
+        "expectedCredentialValue": true,
+        "addressSource": "https://geniidata.com/ordinals/brc20/sats"
+    },
+    {
+        "index": 1,
+        "contractName": "TokenMapping",
+        "name": "BNB Holding Amount",
+        "parameter": "bnb",
+        "network": "bsc",
+        "mockDid": "litentry:evm:0x3feC5dAd76aD880d580701117C57498D188DEC42",
+        "mockWeb3Network": "bsc",
+        "expectedCredentialValue": false,
+        "addressSource": "https://bscscan.com/"
+    }
+]

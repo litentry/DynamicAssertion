@@ -9,7 +9,8 @@
         "deploy-contract": "./scripts/run_deploy.sh",
         "format": "prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol' && prettier --write .",
         "check-format": "prettier --check --plugin=prettier-plugin-solidity 'contracts/**/*.sol' && prettier --check .",
-        "test": "npx hardhat test"
+        "test": "npx hardhat test",
+        "test-integration": "cd vc-di-tests/integration-tests && pnpm run test assertion_contracts.test.ts"
     },
     "devDependencies": {
         "@litentry/chaindata": "^0.1.1",
