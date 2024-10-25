@@ -241,12 +241,18 @@ describe('Test Vc (direct request)', function () {
         }
     }
     before(async () => {
-        const parachainEndpoint = process.env.PARACHAIN_ENDPOINT
-        if (!parachainEndpoint) {
-            throw new Error(
-                'PARACHAIN_ENDPOINT environment variable is missing.'
-            )
-        }
+        console.log(
+            `process.env.GENIIDATA_API_KEY!`,
+            process.env.GENIIDATA_API_KEY!
+        )
+        console.log(
+            `process.env.NODEREAL_API_KEY!`,
+            process.env.NODEREAL_API_KEY!
+        )
+        console.log(
+            `process.env.MORALIS_API_KEY!`,
+            process.env.MORALIS_API_KEY!
+        )
 
         context = await initIntegrationTestContext(
             nodeEndpoint,
@@ -334,26 +340,26 @@ describe('Test Vc (direct request)', function () {
         await sleep(12)
     })
 
- for (const [index, credentialDefinition] of credentialsJson.entries()) {
-     step(
-         `linking identity ${credentialDefinition.mockDid} via cli`,
-         async function () {
-             const keyringPair = generateSubstrateAddress(
-                 credentialDefinition.index
-             )
-             keyringPairs.push(keyringPair)
+    for (const [index, credentialDefinition] of credentialsJson.entries()) {
+        step(
+            `linking identity ${credentialDefinition.mockDid} via cli`,
+            async function () {
+                const keyringPair = generateSubstrateAddress(
+                    credentialDefinition.index
+                )
+                keyringPairs.push(keyringPair)
 
-             const substrateIdentity = await new PolkadotSigner(
-                 keyringPair
-             ).getIdentity(context)
-             substrateIdentities.push(substrateIdentity)
+                const substrateIdentity = await new PolkadotSigner(
+                    keyringPair
+                ).getIdentity(context)
+                substrateIdentities.push(substrateIdentity)
 
-             await linkIdentityViaCli(credentialDefinition, index)
-             await requestVc(credentialDefinition, index)
-             console.log('waiting 12 seconds...')
+                await linkIdentityViaCli(credentialDefinition, index)
+                await requestVc(credentialDefinition, index)
+                console.log('waiting 12 seconds...')
 
-             await sleep(12)
-         }
-     )
- }
+                await sleep(12)
+            }
+        )
+    }
 })
