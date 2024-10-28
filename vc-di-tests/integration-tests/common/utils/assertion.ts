@@ -1,49 +1,18 @@
-import { hexToU8a, u8aToHex } from '@polkadot/util'
+import { hexToU8a } from '@polkadot/util'
 import { assert } from 'chai'
 import * as ed from '@noble/ed25519'
-import { parseIdGraph } from './identity-helper'
+
 import { CorePrimitivesIdentity } from '@litentry/parachain-api'
 import type { IntegrationTestContext } from '../common-types'
-import { getIdGraphHash } from '../di-utils'
-import type { HexString } from '@polkadot/util/types'
+
 import { nextRequestId } from '../helpers'
 import { aesKey, sendRequest } from '../call'
-import colors from 'colors'
-import { WorkerRpcReturnValue, StfError } from '@litentry/parachain-api'
+
+import { WorkerRpcReturnValue } from '@litentry/parachain-api'
 import { Bytes } from '@polkadot/types-codec'
 import { decryptWithAes } from './crypto'
-import { base58Encode, blake2AsHex } from '@polkadot/util-crypto'
+import { base58Encode } from '@polkadot/util-crypto'
 import { validateVcSchema } from '@litentry/vc-schema-validator'
-import { PalletIdentityManagementTeeIdentityContext } from '@litentry/sidechain-api'
-import { KeyObject } from 'crypto'
-
-export function assertIdGraph(
-    actual: [
-        CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
-    ][],
-    expected: [CorePrimitivesIdentity, boolean][]
-) {
-    assert.equal(actual.length, expected.length)
-    expected.forEach((expected, i) => {
-        assert.deepEqual(
-            actual[i][0].toJSON(),
-            expected[0].toJSON(),
-            'event idGraph identity should be equal expectedIdentity'
-        )
-
-        const idGraphContext = actual[0][1]
-        assert.isTrue(
-            idGraphContext.linkBlock.toNumber() > 0,
-            'link_block should be greater than 0'
-        )
-        assert.equal(
-            idGraphContext.status.isActive,
-            expected[1],
-            'isActive should be ' + expected[1]
-        )
-    })
-}
 
 export async function assertIsInSidechainBlock(
     callType: string,
@@ -60,49 +29,6 @@ export async function assertIsInSidechainBlock(
         status[0].isSubmitted || status[0].isInSidechainBlock,
         `${callType} should be submitted or in sidechain block, but is ${status[0].type}`
     )
-}
-
-export function assertWorkerError(
-    context: IntegrationTestContext,
-    check: (returnValue: StfError) => void,
-    returnValue: WorkerRpcReturnValue
-) {
-    const errValueDecoded = context.api.createType(
-        'StfError',
-        returnValue.value
-    )
-    check(errValueDecoded)
-}
-
-// a common assertion for all DI requests that might mutate the IdGraph
-// returns the `id_graph_hash` in the `returnValue`
-export async function assertIdGraphMutationResult(
-    context: IntegrationTestContext,
-    teeShieldingKey: KeyObject,
-    identity: CorePrimitivesIdentity,
-    returnValue: WorkerRpcReturnValue,
-    resultType:
-        | 'LinkIdentityResult'
-        | 'DeactivateIdentityResult'
-        | 'ActivateIdentityResult'
-        | 'SetIdentityNetworksResult',
-    expectedIdGraph: [CorePrimitivesIdentity, boolean][]
-): Promise<HexString> {
-    const decodedResult = context.api.createType(resultType, returnValue.value)
-    assert.isNotNull(decodedResult.mutated_id_graph)
-    const idGraph = parseIdGraph(
-        context.sidechainRegistry,
-        decodedResult.mutated_id_graph,
-        aesKey
-    )
-    assertIdGraph(idGraph, expectedIdGraph)
-    const queriedIdGraphHash = (
-        await getIdGraphHash(context, teeShieldingKey, identity)
-    ).toHex()
-    assert.equal(u8aToHex(decodedResult.id_graph_hash), queriedIdGraphHash)
-
-    console.log(colors.green('assertIdGraphMutationResult passed'))
-    return u8aToHex(decodedResult.id_graph_hash)
 }
 
 export async function assertVc(
@@ -239,30 +165,6 @@ export async function assertVc(
         'Check Vc proof type error: proof type should be Ed25519Signature2020'
     )
 }
-
-export async function assertIdGraphHash(
-    context: IntegrationTestContext,
-    teeShieldingKey: KeyObject,
-    identity: CorePrimitivesIdentity,
-    idGraph: [
-        CorePrimitivesIdentity,
-        PalletIdentityManagementTeeIdentityContext,
-    ][]
-) {
-    const idGraphType = context.sidechainRegistry.createType(
-        'Vec<(CorePrimitivesIdentity, PalletIdentityManagementTeeIdentityContext)>',
-        idGraph
-    )
-    const computedIdGraphHash = blake2AsHex(idGraphType.toU8a())
-    console.log('computed id graph hash: ', computedIdGraphHash)
-
-    const queriedIdGraphHash = (
-        await getIdGraphHash(context, teeShieldingKey, identity)
-    ).toHex()
-    console.log('queried id graph hash: ', queriedIdGraphHash)
-    assert.equal(computedIdGraphHash, queriedIdGraphHash)
-}
-
 function trimPrefix(str: string, prefix: string): string {
     if (str.startsWith(prefix)) {
         return str.substring(prefix.length)

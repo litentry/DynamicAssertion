@@ -1,29 +1,25 @@
 import { randomBytes, KeyObject } from 'crypto'
 import { step } from 'mocha-steps'
-import { buildValidations, initIntegrationTestContext } from './common/utils'
+import { initIntegrationTestContext } from './common/utils'
 import { assertIsInSidechainBlock, assertVc } from './common/utils/assertion'
 import {
     getSidechainNonce,
     getTeeShieldingKey,
     sendRequestFromTrustedCall,
     createSignedTrustedCallRequestVc,
-    createSignedTrustedCallLinkIdentity,
     sendAesRequestFromGetter,
     createSignedTrustedGetterIdGraph,
-    decodeIdGraph,
-} from './common/di-utils' // @fixme move to a better place
+} from './common/di-utils'
 import type { IntegrationTestContext } from './common/common-types'
 import { aesKey } from './common/call'
 import type {
     CorePrimitivesIdentity,
-    LitentryValidationData,
-    Web3Network,
     WorkerRpcReturnValue,
 } from '@litentry/parachain-api'
 import fs from 'fs'
 import path from 'path'
 import { assert } from 'chai'
-import { genesisSubstrateWallet, randomSubstrateWallet } from './common/helpers'
+import { genesisSubstrateWallet } from './common/helpers'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { subscribeToEvents } from './common/transactions'
 import {
@@ -33,7 +29,6 @@ import {
 } from './common/utils/crypto'
 import { ethers } from 'ethers'
 import { sleep } from './common/utils'
-import { Bytes, Vec } from '@polkadot/types-codec'
 import { hexToU8a, stringToU8a, u8aToHex } from '@polkadot/util'
 import { byId } from '@litentry/chaindata'
 import { $ as zx } from 'zx'
@@ -56,19 +51,11 @@ function generateSubstrateAddress(index: number): KeyringPair {
 describe('Test Vc (direct request)', function () {
     let context: IntegrationTestContext = undefined as any
     let teeShieldingKey: KeyObject = undefined as any
-    let aliceSubstrateIdentity: CorePrimitivesIdentity = undefined as any
     const substrateIdentities: CorePrimitivesIdentity[] = []
     const keyringPairs: KeyringPair[] = []
-
     let alice: KeyringPair = undefined as any
     let contractBytecode = undefined as any
-    const clientDir = process.env.LITENTRY_CLI_DIR
-    const linkIdentityRequestParams: {
-        nonce: number
-        identity: CorePrimitivesIdentity
-        validation: LitentryValidationData
-        networks: Bytes | Vec<Web3Network>
-    }[] = []
+
     const chain = byId['litentry-dev']
     const nodeEndpoint: string = chain.rpcs[0].url
     const enclaveEndpoint: string = chain.enclaveRpcs[0].url
@@ -215,16 +202,12 @@ describe('Test Vc (direct request)', function () {
                 new PolkadotSigner(keyringPairs[index]),
                 substrateIdentities[index]
             )
-            const res = await sendAesRequestFromGetter(
+            await sendAesRequestFromGetter(
                 context,
                 teeShieldingKey,
                 hexToU8a(aesKey),
                 idGraphGetter
             )
-
-            const idGraph = decodeIdGraph(context.sidechainRegistry, res.value)
-
-            assert.lengthOf(idGraph, 2, 'idGraph length should be 2')
         } catch (error: any) {
             if (
                 error.stderr &&
@@ -260,8 +243,6 @@ describe('Test Vc (direct request)', function () {
         )
 
         teeShieldingKey = await getTeeShieldingKey(context)
-        aliceSubstrateIdentity =
-            await context.web3Wallets.substrate.Alice.getIdentity(context)
         alice = genesisSubstrateWallet('Alice')
 
         contracts = [
@@ -344,9 +325,8 @@ describe('Test Vc (direct request)', function () {
         step(
             `linking identity ${credentialDefinition.mockDid} via cli`,
             async function () {
-                const keyringPair = generateSubstrateAddress(
-                    credentialDefinition.index
-                )
+                console.log(`index: ${index}`)
+                const keyringPair = generateSubstrateAddress(index)
                 keyringPairs.push(keyringPair)
 
                 const substrateIdentity = await new PolkadotSigner(

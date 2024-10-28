@@ -1,23 +1,20 @@
 import { CorePrimitivesAssertionNetworkWeb3Network } from '@litentry/parachain-api'
-import type { Codec } from '@polkadot/types-codec/types'
-import type { U8aLike } from '@polkadot/util/types'
-
-type AssertionGenericPayload =
-    | string
-    | Array<string | number | Codec | U8aLike>
-    | Record<string, unknown>
 
 import TokenMappingJson from './TokenMapping.json' assert { type: 'json' }
+import PlatformUserJson from './PlatformUser.json' assert { type: 'json' }
 
 export const TokenMapping = TokenMappingJson as CredentialDefinition[]
+export const PlatformUser = PlatformUserJson as CredentialDefinition[]
 
-export const credentialsJson = [...TokenMapping]
+// Pls do not change the order here
+// If there are any new ones, please add them at the end of the array
+export const credentialsJson = [...TokenMapping, ...PlatformUser]
 
 export interface CredentialDefinition {
-    index: number
     contractName: string
     name: string
     parameter: string
+    dataProvider: string
     network: CorePrimitivesAssertionNetworkWeb3Network['type']
     mockDid: string
     mockWeb3Network: string
