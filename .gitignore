@@ -22,7 +22,7 @@ ignition/deployments/chain-31337
 # Remix
 compiler_config.json
 remix-compiler.config.js
-vc-di-tests/integration-tests/.env.local
 
 # Integration tests
-/vc-di-tests/integration-tests/env.local
+*.env
+vc-di-tests/integration-tests/.env.local
