@@ -16,7 +16,7 @@
         "parameter": "sats",
         "dataProvider": "geniidata",
         "network": "bitcoin",
-        "mockDid": "litentry:bitcoin:0x027c5b4fa4aac0696636fed8f91e6037509d5fb489980be15cbe5f5267b5b89214",
+        "mockDid": "litentry:bitcoin:0x0245a6b3f8eeab8e88501a9a25391318dce9bf35e24c377ee82799543606bf5212",
         "mockWeb3Network": "bitcoinp2tr",
         "expectedCredentialValue": false,
         "addressSource": "https://geniidata.com/ordinals/brc20/sats"

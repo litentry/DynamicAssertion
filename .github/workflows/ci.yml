@@ -78,7 +78,11 @@ jobs:
                   docker pull litentry/identity-cli:latest
                   docker pull litentry/litentry-chain-aio:latest
 
-            - run: docker images --all
+            - name: Start parachain-worker
+              shell: bash
+              run: |
+                  ./scripts/run_parachain_worker.sh
+                  docker ps
 
             - name: Compile contracts
               run: |

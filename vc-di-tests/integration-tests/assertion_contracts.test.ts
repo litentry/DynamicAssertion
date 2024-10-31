@@ -56,14 +56,14 @@ describe('Test Vc (direct request)', function () {
     let alice: KeyringPair = undefined as any
     let contractBytecode = undefined as any
 
-    const chain = byId['litentry-dev']
+    const chain = byId['litentry-local']
     const nodeEndpoint: string = chain.rpcs[0].url
     const enclaveEndpoint: string = chain.enclaveRpcs[0].url
     console.log(`[node] ${nodeEndpoint}`)
     console.log(`[worker] ${enclaveEndpoint}`)
 
-    const teeDevNodePort = 443
-    const teeDevWorkerPort = 443
+    const teeDevNodePort = 9944
+    const teeDevWorkerPort = 2000
     const { protocol: workerProtocal, hostname: workerHostname } = new URL(
         enclaveEndpoint
     )
@@ -188,7 +188,7 @@ describe('Test Vc (direct request)', function () {
 
         try {
             // CLIENT = "$CLIENT_BIN -p $NPORT -P $WORKER1PORT -u $NODEURL -U $WORKER1URL"
-            const commandPromise = zx`docker run litentry/identity-cli:latest -p ${teeDevNodePort} -P ${teeDevWorkerPort} -u ${
+            const commandPromise = zx`docker run --net=host litentry/identity-cli:latest -p ${teeDevNodePort} -P ${teeDevWorkerPort} -u ${
                 nodeProtocal + nodeHostname
             } -U ${workerProtocal + workerHostname}\
                   trusted -d link-identity did:litentry:substrate:${formatAddress}\
