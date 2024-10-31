@@ -57,8 +57,8 @@ describe('Test Vc (direct request)', function () {
     let contractBytecode = undefined as any
 
     const chain = byId['litentry-local']
-    const nodeEndpoint: string = chain.rpcs[0].url
-    const enclaveEndpoint: string = chain.enclaveRpcs[0].url
+    const nodeEndpoint = env.PARACHAIN_ENDPOINT!
+    const enclaveEndpoint = env.ENCLAVE_ENDPOINT!
     console.log(`[node] ${nodeEndpoint}`)
     console.log(`[worker] ${enclaveEndpoint}`)
 
