@@ -56,7 +56,7 @@ describe('Test Vc (direct request)', function () {
     let alice: KeyringPair = undefined as any
     let contractBytecode = undefined as any
 
-    const chain = byId['litentry-local']
+    const chain = byId['litentry-dev']
     const nodeEndpoint = chain.rpcs[0].url
     const enclaveEndpoint = chain.enclaveRpcs[0].url
     console.log(`[node] ${nodeEndpoint}`)
@@ -224,8 +224,8 @@ describe('Test Vc (direct request)', function () {
         }
     }
     before(async () => {
-        console.log(`env.PARACHAIN_ENDPOINT: ${env.PARACHAIN_ENDPOINT}`)
-        console.log(`env.ENCLAVE_ENDPOINT: ${env.ENCLAVE_ENDPOINT}`)
+        console.log(`nodeEndpoint: ${nodeEndpoint}`)
+        console.log(`ENCLAVE_ENDPOINT: ${enclaveEndpoint}`)
         context = await initIntegrationTestContext(
             nodeEndpoint,
             enclaveEndpoint
