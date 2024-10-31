@@ -77,6 +77,13 @@ jobs:
                   docker pull litentry/identity-worker:latest
                   docker pull litentry/identity-cli:latest
                   docker pull litentry/litentry-chain-aio:latest
+                  
+            - name: Create env file with secrets
+              run: |
+                  mkdir -p /opt/worker_configs
+                  for key in TWITTER_AUTH_TOKEN_V2 DISCORD_AUTH_TOKEN ACHAINABLE_AUTH_KEY ONEBLOCK_NOTION_KEY NODEREAL_API_KEY GENIIDATA_API_KEY MORALIS_API_KEY MAGIC_CRAFT_API_KEY; do
+                      echo "$key=${{ secrets[$key] }}" >> /opt/worker_configs/worker_env
+                  done
 
             - name: Start parachain-worker
               shell: bash
