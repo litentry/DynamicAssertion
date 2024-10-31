@@ -64,7 +64,6 @@ export async function initIntegrationTestContext(
     const workerEndpoint = enclaveEndpoint
         ? enclaveEndpoint
         : await getenclaveEndpoint(api)
-    console.log(`workerEndpoint: ${workerEndpoint}`)
     const wsp = await initWorkerConnection(workerEndpoint)
     const requestId = 1
 

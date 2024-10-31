@@ -11,6 +11,8 @@ const envSchema = z.object({
     GENIIDATA_API_KEY: z.string(),
     MORALIS_API_KEY: z.string(),
     MAGIC_CRAFT_API_KEY: z.string(),
+    PARACHAIN_ENDPOINT: z.string().optional().default('ws://127.0.0.1:9944'),
+    ENCLAVE_ENDPOINT: z.string().optional().default('ws://127.0.0.1:2000'),
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

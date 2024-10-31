@@ -224,9 +224,11 @@ describe('Test Vc (direct request)', function () {
         }
     }
     before(async () => {
+        console.log(`env.PARACHAIN_ENDPOINT: ${env.PARACHAIN_ENDPOINT}`)
+        console.log(`env.ENCLAVE_ENDPOINT: ${env.ENCLAVE_ENDPOINT}`)
         context = await initIntegrationTestContext(
-            process.env.PARACHAIN_ENDPOINT!,
-            process.env.ENCLAVE_ENDPOINT!
+            env.PARACHAIN_ENDPOINT!,
+            env.ENCLAVE_ENDPOINT!
         )
 
         teeShieldingKey = await getTeeShieldingKey(context)
