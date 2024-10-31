@@ -225,8 +225,8 @@ describe('Test Vc (direct request)', function () {
     }
     before(async () => {
         context = await initIntegrationTestContext(
-            nodeEndpoint,
-            enclaveEndpoint
+            process.env.PARACHAIN_ENDPOINT!,
+            process.env.ENCLAVE_ENDPOINT!
         )
 
         teeShieldingKey = await getTeeShieldingKey(context)

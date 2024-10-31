@@ -42,8 +42,6 @@ export async function initIntegrationTestContext(
     parachainEndpoint: string,
     enclaveEndpoint?: string
 ): Promise<IntegrationTestContext> {
-    console.log(`parachainEndpoint: ${parachainEndpoint}`)
-    console.log(`enclaveEndpoint: ${enclaveEndpoint}`)
     const provider = new WsProvider(parachainEndpoint)
     await cryptoWaitReady()
 
