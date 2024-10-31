@@ -80,11 +80,11 @@ jobs:
                   echo "MORALIS_API_KEY=${{ secrets.MORALIS_API_KEY }}" >> /opt/worker_configs/worker_env
                   echo "MAGIC_CRAFT_API_KEY=${{ secrets.MAGIC_CRAFT_API_KEY }}" >> /opt/worker_configs/worker_env
 
-            - name: Start parachain-worker
-              shell: bash
-              run: |
-                  ./scripts/run_parachain_worker.sh
-                  docker ps
+            # - name: Start parachain-worker
+            #   shell: bash
+            #   run: |
+            #       ./scripts/run_parachain_worker.sh
+            #       docker ps
 
             - name: Compile contracts
               run: |

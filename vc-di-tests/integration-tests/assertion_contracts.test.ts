@@ -57,13 +57,13 @@ describe('Test Vc (direct request)', function () {
     let contractBytecode = undefined as any
 
     const chain = byId['litentry-local']
-    const nodeEndpoint = env.PARACHAIN_ENDPOINT!
-    const enclaveEndpoint = env.ENCLAVE_ENDPOINT!
+    const nodeEndpoint = chain.rpcs[0].url
+    const enclaveEndpoint = chain.enclaveRpcs[0].url
     console.log(`[node] ${nodeEndpoint}`)
     console.log(`[worker] ${enclaveEndpoint}`)
 
-    const teeDevNodePort = 9944
-    const teeDevWorkerPort = 2000
+    const teeDevNodePort = 443
+    const teeDevWorkerPort = 443
     const { protocol: workerProtocal, hostname: workerHostname } = new URL(
         enclaveEndpoint
     )
@@ -227,8 +227,8 @@ describe('Test Vc (direct request)', function () {
         console.log(`env.PARACHAIN_ENDPOINT: ${env.PARACHAIN_ENDPOINT}`)
         console.log(`env.ENCLAVE_ENDPOINT: ${env.ENCLAVE_ENDPOINT}`)
         context = await initIntegrationTestContext(
-            env.PARACHAIN_ENDPOINT!,
-            env.ENCLAVE_ENDPOINT!
+            nodeEndpoint,
+            enclaveEndpoint
         )
 
         teeShieldingKey = await getTeeShieldingKey(context)
