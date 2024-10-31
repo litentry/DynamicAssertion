@@ -34,7 +34,7 @@ import { byId } from '@litentry/chaindata'
 import { $ as zx } from 'zx'
 import { CredentialDefinition, credentialsJson } from './common/credential-json'
 import { Keyring } from '@polkadot/keyring'
-
+import { env } from './common/loadEnv'
 function randomContractId(): string {
     const bytes = randomBytes(20)
     return '0x' + bytes.toString('hex')
@@ -224,19 +224,6 @@ describe('Test Vc (direct request)', function () {
         }
     }
     before(async () => {
-        console.log(
-            `process.env.GENIIDATA_API_KEY!`,
-            process.env.GENIIDATA_API_KEY!
-        )
-        console.log(
-            `process.env.NODEREAL_API_KEY!`,
-            process.env.NODEREAL_API_KEY!
-        )
-        console.log(
-            `process.env.MORALIS_API_KEY!`,
-            process.env.MORALIS_API_KEY!
-        )
-
         context = await initIntegrationTestContext(
             nodeEndpoint,
             enclaveEndpoint
@@ -251,9 +238,9 @@ describe('Test Vc (direct request)', function () {
                 path: '../../artifacts/contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json',
                 secrets: [
                     // The order is very important, refer to the order of secrets(/contracts/token_holding_amount/TokenQueryLogic.sol:queryBalance(...secrets)).
-                    generateSecrets(process.env.GENIIDATA_API_KEY!, context),
-                    generateSecrets(process.env.NODEREAL_API_KEY!, context),
-                    generateSecrets(process.env.MORALIS_API_KEY!, context),
+                    generateSecrets(env.GENIIDATA_API_KEY, context),
+                    generateSecrets(env.NODEREAL_API_KEY, context),
+                    generateSecrets(env.MORALIS_API_KEY, context),
                 ],
                 bytecode: '',
                 contractId: randomContractId(),
