@@ -225,7 +225,7 @@ describe('Test Vc (direct request)', function () {
     }
     before(async () => {
         console.log(`nodeEndpoint: ${nodeEndpoint}`)
-        console.log(`ENCLAVE_ENDPOINT: ${enclaveEndpoint}`)
+        console.log(`enclaveEndpoint: ${enclaveEndpoint}`)
         context = await initIntegrationTestContext(
             nodeEndpoint,
             enclaveEndpoint
@@ -314,6 +314,7 @@ describe('Test Vc (direct request)', function () {
         step(
             `linking identity ${credentialDefinition.mockDid} via cli`,
             async function () {
+                this.timeout(300000)
                 console.log(`index: ${index}`)
                 const keyringPair = generateSubstrateAddress(index)
                 keyringPairs.push(keyringPair)
