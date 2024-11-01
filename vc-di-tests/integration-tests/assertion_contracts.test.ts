@@ -23,7 +23,6 @@ import { genesisSubstrateWallet } from './common/helpers'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { subscribeToEvents } from './common/transactions'
 import {
-    decryptWithAes,
     encryptWithTeeShieldingKey,
     PolkadotSigner,
 } from './common/utils/crypto'
@@ -31,7 +30,7 @@ import { ethers } from 'ethers'
 import { sleep } from './common/utils'
 import { hexToU8a, stringToU8a, u8aToHex } from '@polkadot/util'
 import { byId } from '@litentry/chaindata'
-import { $ as zx } from 'zx'
+import { log, $ as zx } from 'zx'
 import { CredentialDefinition, credentialsJson } from './common/credential-json'
 import { Keyring } from '@polkadot/keyring'
 import { env } from './common/loadEnv'
@@ -55,6 +54,7 @@ describe('Test Vc (direct request)', function () {
     const keyringPairs: KeyringPair[] = []
     let alice: KeyringPair = undefined as any
     let contractBytecode = undefined as any
+    const errorArray: { index: number; assertion: any; error: any }[] = []
 
     const chain = byId['litentry-dev']
     const nodeEndpoint = chain.rpcs[0].url
@@ -99,81 +99,128 @@ describe('Test Vc (direct request)', function () {
         return contract.contractId
     }
 
+    before(async () => {
+        console.log(`nodeEndpoint: ${nodeEndpoint}`)
+        console.log(`enclaveEndpoint: ${enclaveEndpoint}`)
+        context = await initIntegrationTestContext(
+            nodeEndpoint,
+            enclaveEndpoint
+        )
+
+        teeShieldingKey = await getTeeShieldingKey(context)
+        alice = genesisSubstrateWallet('Alice')
+
+        contracts = [
+            {
+                name: 'TokenMapping',
+                path: '../../artifacts/contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json',
+                secrets: [
+                    // The order is very important, refer to the order of secrets(/contracts/token_holding_amount/TokenQueryLogic.sol:queryBalance(...secrets)).
+                    generateSecrets(env.GENIIDATA_API_KEY, context),
+                    generateSecrets(env.NODEREAL_API_KEY, context),
+                    generateSecrets(env.MORALIS_API_KEY, context),
+                ],
+                bytecode: '',
+                contractId: randomContractId(),
+            },
+            {
+                name: 'PlatformUser',
+                path: '../../artifacts/contracts/platform_user/PlatformUser.sol/PlatformUser.json',
+                secrets: [],
+                bytecode: '',
+                contractId: randomContractId(),
+            },
+            // add more contracts here
+        ]
+    })
     async function requestVc(
         credentialDefinition: CredentialDefinition,
         index: number
     ) {
-        const contractId = matchContractId(credentialDefinition.contractName)
-        console.log(`contractId: ${contractId}`)
-        const requestIdentifier = `0x${randomBytes(32).toString('hex')}`
-        let currentNonce = (
-            await getSidechainNonce(context, substrateIdentities[index])
-        ).toNumber()
-        const getNextNonce = () => currentNonce++
-        const nonce = getNextNonce()
-
-        const abiCoder = new ethers.utils.AbiCoder()
-        const encodedData = abiCoder.encode(
-            ['string'],
-            [credentialDefinition.parameter]
-        )
-        const assertion = {
-            dynamic: context.api.createType('DynamicParams', [
-                contractId,
-                encodedData,
-                true,
-            ]),
-        }
-        const requestVcCall = await createSignedTrustedCallRequestVc(
-            context.api,
-            context.mrEnclave,
-            context.api.createType('Index', nonce),
-            new PolkadotSigner(keyringPairs[index]),
-            substrateIdentities[index],
-            context.api.createType('Assertion', assertion).toHex(),
-            context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
-            requestIdentifier
-        )
-
-        const onMessageReceived = async (res: WorkerRpcReturnValue) => {
-            const vcresponse = context.api.createType(
-                'RequestVcResultOrError',
-                res.value
+        try {
+            const contractId = matchContractId(
+                credentialDefinition.contractName
             )
-            console.log(
-                `vcresponse len: ${vcresponse.len}, idx: ${
-                    vcresponse.idx
-                }, vc result: ${JSON.stringify(vcresponse.result)}`
+            console.log(`contractId: ${contractId}`)
+            const requestIdentifier = `0x${randomBytes(32).toString('hex')}`
+            let currentNonce = (
+                await getSidechainNonce(context, substrateIdentities[index])
+            ).toNumber()
+            const getNextNonce = () => currentNonce++
+            const nonce = getNextNonce()
+
+            const abiCoder = new ethers.utils.AbiCoder()
+            const encodedData = abiCoder.encode(
+                ['string'],
+                [credentialDefinition.parameter]
             )
-            if (vcresponse.result.isOk)
-                await assertVc(
+            const assertion = {
+                dynamic: context.api.createType('DynamicParams', [
+                    contractId,
+                    encodedData,
+                    true,
+                ]),
+            }
+            const requestVcCall = await createSignedTrustedCallRequestVc(
+                context.api,
+                context.mrEnclave,
+                context.api.createType('Index', nonce),
+                new PolkadotSigner(keyringPairs[index]),
+                substrateIdentities[index],
+                context.api.createType('Assertion', assertion).toHex(),
+                context.api.createType('Option<RequestAesKey>', aesKey).toHex(),
+                requestIdentifier
+            )
+
+            const asOkResult = await new Promise<any>((resolve, reject) => {
+                const onMessageReceived = async (res: WorkerRpcReturnValue) => {
+                    try {
+                        const vcresponse = context.api.createType(
+                            'RequestVcResultOrError',
+                            res.value
+                        )
+                        console.log(
+                            `vcresponse len: ${vcresponse.len}, idx: ${
+                                vcresponse.idx
+                            }, vc result: ${JSON.stringify(vcresponse.result)}`
+                        )
+                        if (
+                            vcresponse.result.isOk &&
+                            vcresponse.result.asOk.toString() !== '0x'
+                        ) {
+                            resolve(vcresponse.result.asOk)
+                        }
+                    } catch (error) {
+                        reject(error)
+                    }
+                }
+
+                sendRequestFromTrustedCall(
                     context,
-                    substrateIdentities[index],
-                    vcresponse.result.asOk
-                )
-            const decryptVcPayload = decryptWithAes(
-                aesKey,
-                vcresponse.vc_payload,
-                'utf-8'
-            ).replace('0x', '')
-            const vcPayloadJson = JSON.parse(decryptVcPayload)
-            console.log(`vcPayloadJson: ${JSON.stringify(vcPayloadJson)}`)
-            assert.equal(
-                vcPayloadJson.credentialSubject.values[0],
-                credentialDefinition.expectedCredentialValue,
-                "credential value doesn't match, please check the credential json expectedCredentialValue"
+                    teeShieldingKey,
+                    requestVcCall,
+                    onMessageReceived
+                ).catch(reject)
+            })
+
+            await assertVc(
+                context,
+                substrateIdentities[index],
+                asOkResult,
+                credentialDefinition.expectedCredentialValue
+            )
+        } catch (error) {
+            errorArray.push({
+                index: index,
+                assertion: JSON.stringify(credentialDefinition.name),
+                error: error,
+            })
+            console.error(
+                `Error in requestVc for ${credentialDefinition.name} at index ${index}:`,
+                error
             )
         }
-        const callResults = await sendRequestFromTrustedCall(
-            context,
-            teeShieldingKey,
-            requestVcCall,
-            onMessageReceived
-        )
-        await assertIsInSidechainBlock(
-            `${Object.keys(assertion)[0]} requestVcCall`,
-            callResults
-        )
+        await sleep(12)
     }
     async function linkIdentityViaCli(
         credentialDefinition: CredentialDefinition,
@@ -223,41 +270,6 @@ describe('Test Vc (direct request)', function () {
             }
         }
     }
-    before(async () => {
-        console.log(`nodeEndpoint: ${nodeEndpoint}`)
-        console.log(`enclaveEndpoint: ${enclaveEndpoint}`)
-        context = await initIntegrationTestContext(
-            nodeEndpoint,
-            enclaveEndpoint
-        )
-
-        teeShieldingKey = await getTeeShieldingKey(context)
-        alice = genesisSubstrateWallet('Alice')
-
-        contracts = [
-            {
-                name: 'TokenMapping',
-                path: '../../artifacts/contracts/token_holding_amount/TokenMapping.sol/TokenMapping.json',
-                secrets: [
-                    // The order is very important, refer to the order of secrets(/contracts/token_holding_amount/TokenQueryLogic.sol:queryBalance(...secrets)).
-                    generateSecrets(env.GENIIDATA_API_KEY, context),
-                    generateSecrets(env.NODEREAL_API_KEY, context),
-                    generateSecrets(env.MORALIS_API_KEY, context),
-                ],
-                bytecode: '',
-                contractId: randomContractId(),
-            },
-            {
-                name: 'PlatformUser',
-                path: '../../artifacts/contracts/platform_user/PlatformUser.sol/PlatformUser.json',
-                secrets: [],
-                bytecode: '',
-                contractId: randomContractId(),
-            },
-            // add more contracts here
-        ]
-    })
-
     step('loading contract bytecode', async function () {
         for (const contract of contracts) {
             const file = path.resolve('./', contract.path)
@@ -310,7 +322,7 @@ describe('Test Vc (direct request)', function () {
         await sleep(12)
     })
 
-    for (const [index, credentialDefinition] of credentialsJson.entries()) {
+    credentialsJson.forEach((credentialDefinition, index) => {
         step(
             `linking identity ${credentialDefinition.mockDid} via cli`,
             async function () {
@@ -326,10 +338,15 @@ describe('Test Vc (direct request)', function () {
 
                 await linkIdentityViaCli(credentialDefinition, index)
                 await requestVc(credentialDefinition, index)
-                console.log('waiting 12 seconds...')
-
-                await sleep(12)
             }
         )
-    }
+    })
+    after(async function () {
+        if (errorArray.length > 0) {
+            console.log('errorArray:', errorArray)
+            throw new Error(
+                `${errorArray.length} tests failed. See above for details.`
+            )
+        }
+    })
 })

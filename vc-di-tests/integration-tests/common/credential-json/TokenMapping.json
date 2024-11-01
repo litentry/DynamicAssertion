@@ -82,7 +82,7 @@
         "parameter": "btc",
         "dataProvider": "blockchaininfo",
         "network": "bitcoin",
-        "mockDid": "litentry:bitcoin:0x021001e74c3b0c1eff4695aaa3ee6b30a89ef8fbc124b8863c881f75efcd4dd0cc",
+        "mockDid": "litentry:bitcoin:0x03f5cb8154281a13256962c9a34b6c461f31431c55c506c77bc51cd21e1c7d2c13",
         "mockWeb3Network": "bitcoinp2tr",
         "expectedCredentialValue": false,
         "addressSource": "https://www.blockchain.com/explorer/assets/btc"
