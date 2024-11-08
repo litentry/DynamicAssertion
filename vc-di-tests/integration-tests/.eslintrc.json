@@ -13,28 +13,6 @@
     **/
         "@typescript-eslint/no-explicit-any": ["off"],
         "@typescript-eslint/no-non-null-assertion": ["off"],
-        "@typescript-eslint/no-var-requires": ["off"],
-
-        // explanation: https://typescript-eslint.io/rules/naming-convention/
-        "@typescript-eslint/naming-convention": [
-            "error",
-            {
-                "selector": "typeLike",
-                "format": ["StrictPascalCase"]
-            },
-            {
-                "selector": "variable",
-                "modifiers": ["const"],
-                "format": ["strictCamelCase", "UPPER_CASE"]
-            },
-            {
-                "selector": "function",
-                "format": ["strictCamelCase", "StrictPascalCase"]
-            },
-            {
-                "selector": "parameter",
-                "format": ["strictCamelCase"]
-            }
-        ]
+        "@typescript-eslint/no-var-requires": ["off"]
     }
 }

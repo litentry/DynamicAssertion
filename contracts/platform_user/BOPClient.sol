@@ -6,7 +6,7 @@ import "../libraries/Identities.sol";
 
 library BOPClient {
     function talentAsset(string memory account) internal returns (bool, bool) {
-        string memory url = "https://bop.burve.workers.dev/?address=";
+        string memory url = "https://bop.burve.workers.dev/api?address=";
 
         url = string(abi.encodePacked(url, account));
 

@@ -1,0 +1,46 @@
+[
+    {
+        "contractName": "PlatformUser",
+        "name": "BOP NFT Holder",
+        "parameter": "BOP",
+        "dataProvider": "bop.burve.workers.dev",
+        "network": "ethereum",
+        "mockDid": "litentry:evm:0xA9d439F4DED81152DB00CB7CD94A8d908FEF903e",
+        "mockWeb3Network": "ethereum",
+        "expectedCredentialValue": true,
+        "addressSource": "https://bop.burve.workers.dev/?address=0xA9d439F4DED81152DB00CB7CD94A8d908FEF903e"
+    },
+    {
+        "contractName": "PlatformUser",
+        "name": "BOP NFT Holder",
+        "parameter": "BOP",
+        "dataProvider": "bop.burve.workers.dev",
+        "network": "ethereum",
+        "mockDid": "litentry:evm:0xA9d439F4DED81152DB00CB7CD94A8d908FEF913e",
+        "mockWeb3Network": "ethereum",
+        "expectedCredentialValue": false,
+        "addressSource": "https://bop.burve.workers.dev/?address=0xA9d439F4DED81152DB00CB7CD94A8d908FEF913e"
+    },
+    {
+        "contractName": "PlatformUser",
+        "name": "DarenMarket NFT Holder",
+        "parameter": "DarenMarket",
+        "dataProvider": "daren.market",
+        "network": "ethereum",
+        "mockDid": "litentry:evm:0xDD4E15a1abCF6259A5bDA713A28d2ff2c7994C0d",
+        "mockWeb3Network": "ethereum",
+        "expectedCredentialValue": true,
+        "addressSource": "https://daren.market/api/talent-asset?address=0xDD4E15a1abCF6259A5bDA713A28d2ff2c7994C0d"
+    },
+    {
+        "contractName": "PlatformUser",
+        "name": "BOP NFT Holder",
+        "parameter": "BOP",
+        "dataProvider": "bop.burve.workers.dev",
+        "network": "ethereum",
+        "mockDid": "litentry:evm:0xDD4E15a1abCF6259A5bDA713A28d2ff2c7994C1d",
+        "mockWeb3Network": "ethereum",
+        "expectedCredentialValue": false,
+        "addressSource": "https://bop.burve.workers.dev/?address=0xDD4E15a1abCF6259A5bDA713A28d2ff2c7994C1d"
+    }
+]

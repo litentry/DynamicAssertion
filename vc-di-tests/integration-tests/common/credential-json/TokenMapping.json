@@ -1,0 +1,90 @@
+[
+    {
+        "contractName": "TokenMapping",
+        "name": "Sats Holding Amount",
+        "parameter": "sats",
+        "dataProvider": "geniidata",
+        "network": "bitcoin",
+        "mockDid": "litentry:bitcoin:0x027c5b4fa4aac0696636fed8f91e6037509d5fb489980be15cbe5f5267b5b89314",
+        "mockWeb3Network": "bitcoinp2tr",
+        "expectedCredentialValue": true,
+        "addressSource": "https://geniidata.com/ordinals/brc20/sats"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "Sats Holding Amount",
+        "parameter": "sats",
+        "dataProvider": "geniidata",
+        "network": "bitcoin",
+        "mockDid": "litentry:bitcoin:0x0245a6b3f8eeab8e88501a9a25391318dce9bf35e24c377ee82799543606bf5212",
+        "mockWeb3Network": "bitcoinp2tr",
+        "expectedCredentialValue": false,
+        "addressSource": "https://geniidata.com/ordinals/brc20/sats"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "BNB Holding Amount",
+        "parameter": "bnb",
+        "dataProvider": "nodereal",
+        "network": "bsc",
+        "mockDid": "litentry:evm:0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "mockWeb3Network": "bsc",
+        "expectedCredentialValue": true,
+        "addressSource": "https://bscscan.com/"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "BNB Holding Amount",
+        "parameter": "bnb",
+        "dataProvider": "nodereal",
+        "network": "bsc",
+        "mockDid": "litentry:evm:0xEf500b9a2f95372ED4A61716518c2d91e45add8C",
+        "mockWeb3Network": "bsc",
+        "expectedCredentialValue": false,
+        "addressSource": "https://bscscan.com/"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "SOL Holding Amount",
+        "parameter": "sol",
+        "dataProvider": "moralis",
+        "network": "solana",
+        "mockDid": "litentry:solana:4XCJ5PbHJWP1xfBKyYmV6GnUox1KY1czCiBQW1U3NCNj",
+        "mockWeb3Network": "solana",
+        "expectedCredentialValue": true,
+        "addressSource": "https://solscan.io/account"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "SOL Holding Amount",
+        "parameter": "sol",
+        "dataProvider": "moralis",
+        "network": "solana",
+        "mockDid": "litentry:solana:7DneM4EosPVgA6qG3AFUPFi7xmZ7gRoupYqk3Fm8doFD",
+        "mockWeb3Network": "solana",
+        "expectedCredentialValue": false,
+        "addressSource": "https://solscan.io/account"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "BTC Holding Amount",
+        "parameter": "btc",
+        "dataProvider": "blockchaininfo",
+        "network": "bitcoin",
+        "mockDid": "litentry:bitcoin:0x021001e74c3b0c1eff4695aaa3ee6b30a89ef8fbc124b8863c881f85efcd4dd0cc",
+        "mockWeb3Network": "bitcoinp2tr",
+        "expectedCredentialValue": true,
+        "addressSource": "https://www.blockchain.com/explorer/assets/btc"
+    },
+    {
+        "contractName": "TokenMapping",
+        "name": "BTC Holding Amount",
+        "parameter": "btc",
+        "dataProvider": "blockchaininfo",
+        "network": "bitcoin",
+        "mockDid": "litentry:bitcoin:0x03f5cb8154281a13256962c9a34b6c461f31431c55c506c77bc51cd21e1c7d2c13",
+        "mockWeb3Network": "bitcoinp2tr",
+        "expectedCredentialValue": false,
+        "addressSource": "https://www.blockchain.com/explorer/assets/btc"
+    }
+]

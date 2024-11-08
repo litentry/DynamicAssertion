@@ -15,10 +15,10 @@ import {
     PolkadotSigner,
     BitcoinSigner,
     SolanaSigner,
+    Signer,
 } from './utils/crypto'
 import { Wallets } from './common-types'
 import type { ErrorDetail, StfError } from '@litentry/parachain-api'
-
 export function blake2128Concat(data: HexString | Uint8Array): Uint8Array {
     return u8aConcat(blake2AsU8a(data, 128), u8aToU8a(data))
 }
@@ -77,6 +77,24 @@ export function genesisSolanaWallet(name: string): Keypair {
     return keyPair
 }
 
+export const createWeb3Wallet = (
+    walletType: string,
+    walletName: string
+): Signer => {
+    switch (walletType) {
+        case 'evm':
+            return new EthersSigner(randomEvmWallet())
+        case 'substrate':
+            return new PolkadotSigner(genesisSubstrateWallet(walletName))
+        case 'bitcoin':
+            return new BitcoinSigner(randomBitcoinWallet())
+        case 'solana':
+            return new SolanaSigner(genesisSolanaWallet(walletName))
+        default:
+            throw new Error(`Unsupported wallet type: ${walletType}`)
+    }
+}
+
 export const createWeb3Wallets = (): Wallets => {
     const wallets: Wallets = {
         evm: {},
@@ -86,12 +104,12 @@ export const createWeb3Wallets = (): Wallets => {
     }
     const walletNames = ['Alice', 'Bob', 'Charlie', 'Dave', 'Eve']
     for (const name of walletNames) {
-        wallets.evm[name] = new EthersSigner(randomEvmWallet())
-        wallets.substrate[name] = new PolkadotSigner(
-            genesisSubstrateWallet(name)
-        )
-        wallets.bitcoin[name] = new BitcoinSigner(randomBitcoinWallet())
-        wallets.solana[name] = new SolanaSigner(genesisSolanaWallet(name))
+        for (const walletType in wallets) {
+            ;(wallets as any)[walletType][name] = createWeb3Wallet(
+                walletType,
+                name
+            )
+        }
     }
 
     return wallets
